@@ -94,6 +94,8 @@ export default async function ItemPage({
         <BookingForm
           tenantId={tenant.id}
           itemId={item.id}
+          itemName={item.name}
+          tenantPhone={tenant.phone}
           blockedDates={blockedDates.map((b) => b.date)}
           accent={accent}
         />

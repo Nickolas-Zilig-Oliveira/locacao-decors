@@ -10,6 +10,7 @@ import {
   CloseIcon,
   FileIcon,
   GearIcon,
+  HomeIcon,
   LogoutIcon,
   MenuIcon,
   StoreIcon,
@@ -18,6 +19,7 @@ import {
 } from "./admin-icons";
 
 const navItems = [
+  { href: "/admin", label: "Início", icon: HomeIcon },
   { href: "/admin/items", label: "Itens", icon: BoxIcon },
   { href: "/admin/categories", label: "Categorias", icon: TagIcon },
   { href: "/admin/bookings", label: "Pedidos do site", icon: CalendarIcon },
@@ -31,7 +33,7 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <nav className="space-y-1">
       {navItems.map((item) => {
-        const active = pathname?.startsWith(item.href);
+        const active = item.href === "/admin" ? pathname === "/admin" : pathname?.startsWith(item.href);
         const Icon = item.icon;
         return (
           <Link
