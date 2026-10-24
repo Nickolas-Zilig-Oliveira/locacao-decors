@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useTransition } from "react";
 import { login } from "./actions";
 
@@ -54,6 +55,12 @@ export default function LoginPage() {
           >
             {isPending ? "Entrando..." : "Entrar"}
           </button>
+          <Link
+            href="/admin/forgot-password"
+            className="block text-center text-xs text-white/50 hover:text-white/80 hover:underline"
+          >
+            Esqueci minha senha
+          </Link>
         </form>
 
         <p className="mt-6 text-center text-xs text-white/30">

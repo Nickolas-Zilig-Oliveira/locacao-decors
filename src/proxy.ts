@@ -25,8 +25,10 @@ export async function proxy(request: NextRequest) {
 
   const { data } = await supabase.auth.getUser();
 
+  const publicAdminPaths = ["/admin/login", "/admin/forgot-password", "/admin/reset-password"];
+
   if (request.nextUrl.pathname.startsWith("/admin") &&
-      request.nextUrl.pathname !== "/admin/login" &&
+      !publicAdminPaths.includes(request.nextUrl.pathname) &&
       !data.user) {
     const url = request.nextUrl.clone();
     url.pathname = "/admin/login";
