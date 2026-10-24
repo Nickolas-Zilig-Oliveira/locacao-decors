@@ -30,6 +30,7 @@ export async function updateTenantSettings(
       city: String(formData.get("city") ?? "").trim() || null,
       phone: String(formData.get("phone") ?? "").trim() || null,
       email: String(formData.get("email") ?? "").trim() || null,
+      instagram: String(formData.get("instagram") ?? "").trim() || null,
       cnpj: String(formData.get("cnpj") ?? "").trim() || null,
       address: String(formData.get("address") ?? "").trim() || null,
       description: String(formData.get("description") ?? "").trim() || null,

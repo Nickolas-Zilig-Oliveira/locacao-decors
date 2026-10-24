@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import type { Category, Item, Tenant } from "@/lib/types";
+import { SiteFooter } from "./site-footer";
 import {
   ChevronRightIcon,
   CloseIcon,
@@ -342,6 +343,8 @@ export function CatalogShell({
           <p className={`py-12 text-center ${theme.muted}`}>Nenhum item encontrado.</p>
         )}
       </main>
+
+      <SiteFooter tenantName={tenant.name} instagram={tenant.instagram} dark={dark} />
 
       {isAdminViewer && (
         <Link

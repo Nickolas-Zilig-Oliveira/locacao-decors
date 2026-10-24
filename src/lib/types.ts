@@ -17,6 +17,7 @@ export type Tenant = {
   created_at: string;
   owner_name: string | null;
   owner_phone: string | null;
+  instagram: string | null;
 };
 
 export type QuoteItem = {

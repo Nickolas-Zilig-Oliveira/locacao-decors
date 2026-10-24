@@ -5,6 +5,7 @@ import { isCurrentUserTenantAdmin } from "@/lib/data/admin";
 import { whatsappLink } from "@/lib/whatsapp";
 import { WhatsappButton } from "../../whatsapp-button";
 import { IosBackgroundSync } from "../../ios-background-sync";
+import { SiteFooter } from "../../site-footer";
 import { BookingForm } from "./booking-form";
 
 export default async function ItemPage({
@@ -106,6 +107,8 @@ export default async function ItemPage({
           accent={accent}
         />
       </main>
+
+      <SiteFooter tenantName={tenant.name} instagram={tenant.instagram} />
 
       <WhatsappButton href={wa} />
     </div>
