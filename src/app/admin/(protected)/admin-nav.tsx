@@ -64,9 +64,9 @@ export function AdminTopBar({ tenant, tenantSlug, onLogout }: NavProps) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="lg:hidden">
+    <>
       <div
-        className="sticky top-0 z-30 flex w-full items-center justify-between gap-3 px-4 pb-3 text-white shadow-md"
+        className="sticky top-0 z-30 flex w-full items-center justify-between gap-3 px-4 pb-3 text-white shadow-md lg:hidden"
         style={{
           backgroundColor: tenant.primary_color,
           paddingTop: "max(0.75rem, env(safe-area-inset-top))",
@@ -92,7 +92,7 @@ export function AdminTopBar({ tenant, tenantSlug, onLogout }: NavProps) {
       </div>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex">
+        <div className="fixed inset-0 z-50 flex lg:hidden">
           <div className="absolute inset-0 bg-black/60" onClick={() => setOpen(false)} />
           <div className="relative flex w-72 flex-col bg-neutral-900 p-4 text-white">
             <div className="mb-6 flex items-center justify-between">
@@ -129,7 +129,7 @@ export function AdminTopBar({ tenant, tenantSlug, onLogout }: NavProps) {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
 
