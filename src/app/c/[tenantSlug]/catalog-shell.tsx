@@ -124,7 +124,7 @@ export function CatalogShell({
 
   return (
     <div
-      className={`min-h-screen transition-colors duration-500 ${theme.text}`}
+      className={`transition-colors duration-500 ${theme.text}`}
       style={{ backgroundColor: pageBg }}
     >
       <header

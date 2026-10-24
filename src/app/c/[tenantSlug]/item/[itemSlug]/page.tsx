@@ -29,7 +29,7 @@ export default async function ItemPage({
   const pageBg = `color-mix(in srgb, ${accent} 16%, #0b0b0d)`;
 
   return (
-    <div className="min-h-screen text-white" style={{ backgroundColor: pageBg }}>
+    <div className="text-white" style={{ backgroundColor: pageBg }}>
       <IosBackgroundSync color={pageBg} />
       <header
         className="sticky top-0 z-10 flex items-center gap-3 px-4 pb-3 shadow-lg sm:px-6 lg:px-8"
