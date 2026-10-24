@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState, useTransition } from "react";
+import { formatPhone } from "@/lib/masks";
 import { createBooking } from "./actions";
 
 type Props = {
@@ -157,7 +158,8 @@ export function BookingForm({ tenantId, itemId, blockedDates, accent }: Props) {
           <input
             required
             value={phone}
-            onChange={(e) => setPhone(e.target.value)}
+            onChange={(e) => setPhone(formatPhone(e.target.value))}
+            inputMode="numeric"
             placeholder="(11) 90000-0000"
             className="w-full rounded border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder-white/30"
           />

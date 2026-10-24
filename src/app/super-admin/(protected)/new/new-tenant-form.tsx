@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useTransition } from "react";
+import { formatPhone } from "@/lib/masks";
 import { createTenant } from "../actions";
 
 export function NewTenantForm() {
@@ -109,6 +110,10 @@ export function NewTenantForm() {
             <label className="mb-1 block text-xs font-medium text-neutral-500">WhatsApp</label>
             <input
               name="owner_phone"
+              onChange={(e) => {
+                e.target.value = formatPhone(e.target.value);
+              }}
+              inputMode="numeric"
               placeholder="(11) 90000-0000"
               className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
             />

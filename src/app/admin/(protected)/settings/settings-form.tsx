@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import type { Tenant } from "@/lib/types";
 import { createClient } from "@/lib/supabase/client";
+import { formatCNPJ, formatPhone } from "@/lib/masks";
 import { updateTenantSettings } from "./actions";
 
 export function SettingsForm({ tenant }: { tenant: Tenant }) {
@@ -110,7 +111,11 @@ export function SettingsForm({ tenant }: { tenant: Tenant }) {
               <label className="mb-1 block text-xs font-medium text-neutral-500">Telefone / WhatsApp</label>
               <input
                 name="phone"
-                defaultValue={tenant.phone ?? ""}
+                defaultValue={tenant.phone ? formatPhone(tenant.phone) : ""}
+                onChange={(e) => {
+                  e.target.value = formatPhone(e.target.value);
+                }}
+                inputMode="numeric"
                 placeholder="(11) 90000-0000"
                 className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
               />
@@ -129,7 +134,11 @@ export function SettingsForm({ tenant }: { tenant: Tenant }) {
               <label className="mb-1 block text-xs font-medium text-neutral-500">CNPJ (opcional)</label>
               <input
                 name="cnpj"
-                defaultValue={tenant.cnpj ?? ""}
+                defaultValue={tenant.cnpj ? formatCNPJ(tenant.cnpj) : ""}
+                onChange={(e) => {
+                  e.target.value = formatCNPJ(e.target.value);
+                }}
+                inputMode="numeric"
                 placeholder="00.000.000/0000-00"
                 className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
               />
@@ -194,7 +203,11 @@ export function SettingsForm({ tenant }: { tenant: Tenant }) {
             <label className="mb-1 block text-xs font-medium text-neutral-500">Seu WhatsApp</label>
             <input
               name="owner_phone"
-              defaultValue={tenant.owner_phone ?? ""}
+              defaultValue={tenant.owner_phone ? formatPhone(tenant.owner_phone) : ""}
+              onChange={(e) => {
+                e.target.value = formatPhone(e.target.value);
+              }}
+              inputMode="numeric"
               placeholder="(11) 90000-0000"
               className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
             />

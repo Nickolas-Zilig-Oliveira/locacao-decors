@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState, useTransition } from "react";
 import type { Item, QuoteItem } from "@/lib/types";
 import { quoteTotals } from "@/lib/contract-terms";
+import { formatCPF, formatPhone } from "@/lib/masks";
 import { createQuote } from "../actions";
 
 function blockNonNumericKeys(e: React.KeyboardEvent<HTMLInputElement>) {
@@ -102,7 +103,12 @@ export function QuoteBuilder({
             <label className="mb-1 block text-sm font-medium">Telefone</label>
             <input
               name="customer_phone"
-              defaultValue={prefillCustomerPhone}
+              defaultValue={prefillCustomerPhone ? formatPhone(prefillCustomerPhone) : undefined}
+              onChange={(e) => {
+                e.target.value = formatPhone(e.target.value);
+              }}
+              inputMode="numeric"
+              placeholder="(11) 90000-0000"
               className="w-full rounded border border-neutral-300 px-3 py-2 text-sm"
             />
           </div>
@@ -110,6 +116,11 @@ export function QuoteBuilder({
             <label className="mb-1 block text-sm font-medium">CPF (opcional)</label>
             <input
               name="customer_cpf"
+              onChange={(e) => {
+                e.target.value = formatCPF(e.target.value);
+              }}
+              inputMode="numeric"
+              placeholder="000.000.000-00"
               className="w-full rounded border border-neutral-300 px-3 py-2 text-sm"
             />
           </div>
