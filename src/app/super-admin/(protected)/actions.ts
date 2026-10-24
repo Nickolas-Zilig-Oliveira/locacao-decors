@@ -90,22 +90,3 @@ export async function createTenant(formData: FormData): Promise<CreateTenantResu
   revalidatePath("/super-admin");
   return { ok: true, slug, adminEmail, adminPassword };
 }
-
-export type ResetPasswordResult = { ok: true; password: string } | { ok: false; error: string };
-
-export async function resetTenantAdminPassword(userId: string): Promise<ResetPasswordResult> {
-  if (!(await isPlatformAdmin())) redirect("/super-admin/login");
-
-  const password = randomPassword();
-  const supabase = await createClient();
-  const { error } = await supabase.rpc("reset_tenant_admin_password", {
-    p_user_id: userId,
-    p_password: password,
-  });
-
-  if (error) {
-    return { ok: false, error: "Não foi possível redefinir a senha." };
-  }
-
-  return { ok: true, password };
-}

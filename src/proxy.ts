@@ -33,11 +33,9 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  if (request.nextUrl.pathname.startsWith("/super-admin") &&
-      request.nextUrl.pathname !== "/super-admin/login" &&
-      !data.user) {
+  if (request.nextUrl.pathname.startsWith("/super-admin") && !data.user) {
     const url = request.nextUrl.clone();
-    url.pathname = "/super-admin/login";
+    url.pathname = "/admin/login";
     return NextResponse.redirect(url);
   }
 

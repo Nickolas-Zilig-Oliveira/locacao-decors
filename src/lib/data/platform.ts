@@ -21,6 +21,12 @@ export async function getAllTenants(): Promise<Tenant[]> {
   return data ?? [];
 }
 
+export async function getTenantById(tenantId: string): Promise<Tenant | null> {
+  const supabase = await createClient();
+  const { data } = await supabase.from("tenants").select("*").eq("id", tenantId).maybeSingle();
+  return data;
+}
+
 export async function getTenantAdminEmails(
   tenantId: string
 ): Promise<{ user_id: string; email: string }[]> {
@@ -29,4 +35,18 @@ export async function getTenantAdminEmails(
     p_tenant_id: tenantId,
   });
   return data ?? [];
+}
+
+export type TenantStats = {
+  item_count: number;
+  quote_count: number;
+  booking_count: number;
+  category_count: number;
+  total_received: number;
+};
+
+export async function getTenantStats(tenantId: string): Promise<TenantStats | null> {
+  const supabase = await createClient();
+  const { data } = await supabase.rpc("get_tenant_stats", { p_tenant_id: tenantId }).maybeSingle();
+  return data as TenantStats | null;
 }

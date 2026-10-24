@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { isPlatformAdmin } from "@/lib/data/platform";
-import { superAdminLogout } from "../login/actions";
+import { logout } from "@/app/admin/login/actions";
 
 export default async function SuperAdminLayout({ children }: { children: React.ReactNode }) {
   if (!(await isPlatformAdmin())) {
-    redirect("/super-admin/login");
+    redirect("/admin/login");
   }
 
   return (
@@ -28,7 +28,7 @@ export default async function SuperAdminLayout({ children }: { children: React.R
             + Nova loja
           </Link>
         </nav>
-        <form action={superAdminLogout} className="mt-auto">
+        <form action={logout} className="mt-auto">
           <button className="w-full rounded-xl px-3 py-2.5 text-left text-sm font-medium text-white/70 hover:bg-white/10 hover:text-white">
             Sair
           </button>
@@ -48,7 +48,7 @@ export default async function SuperAdminLayout({ children }: { children: React.R
             <Link href="/super-admin/new" className="text-white/70 hover:text-white">
               + Nova
             </Link>
-            <form action={superAdminLogout}>
+            <form action={logout}>
               <button className="text-white/70 hover:text-white">Sair</button>
             </form>
           </div>
