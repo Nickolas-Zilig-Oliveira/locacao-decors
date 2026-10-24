@@ -43,8 +43,30 @@ export function CatalogShell({
   const [dark, setDark] = useState(true);
   const [canScroll, setCanScroll] = useState(false);
   const [categoryMenuOpen, setCategoryMenuOpen] = useState(false);
+  const [categorySearch, setCategorySearch] = useState("");
   const scrollerRef = useRef<HTMLDivElement>(null);
   const accent = tenant.primary_color;
+
+  const filteredCategories = categorySearch.trim()
+    ? categories.filter((c) => c.name.toLowerCase().includes(categorySearch.trim().toLowerCase()))
+    : categories;
+
+  function closeCategoryMenu() {
+    setCategoryMenuOpen(false);
+    setCategorySearch("");
+  }
+
+  // Lock background scroll while the category drawer is open — otherwise an
+  // empty drawer list lets the scroll chain to the page behind it, which on
+  // iOS briefly reveals the page's white overscroll edge.
+  useEffect(() => {
+    if (!categoryMenuOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [categoryMenuOpen]);
 
   function buildHref(overrides: { categoria?: string; q?: string; tipo?: string }) {
     const params = new URLSearchParams();
@@ -331,47 +353,67 @@ export function CatalogShell({
 
       {categoryMenuOpen && (
         <div className="fixed inset-0 z-50 flex">
-          <div
-            className="absolute inset-0 bg-black/60"
-            onClick={() => setCategoryMenuOpen(false)}
-          />
+          <div className="absolute inset-0 bg-black/60" onClick={closeCategoryMenu} />
           <div
             className="relative flex w-72 max-w-[80vw] flex-col p-4 transition-colors duration-500"
             style={{ backgroundColor: dark ? "#141417" : "#ffffff" }}
           >
-            <div className="mb-4 flex items-center justify-between">
+            <div className="mb-3 flex items-center justify-between">
               <p className={`text-sm font-semibold ${theme.text}`}>Categorias</p>
               <button
                 type="button"
-                onClick={() => setCategoryMenuOpen(false)}
+                onClick={closeCategoryMenu}
                 className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors duration-500 ${theme.iconBtn}`}
                 aria-label="Fechar menu"
               >
                 <CloseIcon className="h-4 w-4" />
               </button>
             </div>
-            <div className="space-y-1 overflow-y-auto">
-              <Link
-                href={buildHref({ q, tipo })}
-                onClick={() => setCategoryMenuOpen(false)}
-                className={`flex items-center justify-between rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-500 ${
-                  !categoria ? "" : theme.pill
+
+            <div className="relative mb-3 shrink-0">
+              <SearchIcon
+                className={`pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 ${
+                  dark ? "text-white/40" : "text-neutral-400"
                 }`}
-                style={!categoria ? { backgroundColor: accent, color: "white" } : undefined}
-              >
-                Todos
-                <span className="rounded-full bg-black/20 px-1.5 py-0.5 text-xs">
-                  {categoryCounts.total}
-                </span>
-              </Link>
-              {categories.map((c) => {
+              />
+              <input
+                type="search"
+                value={categorySearch}
+                onChange={(e) => setCategorySearch(e.target.value)}
+                placeholder="Buscar categoria..."
+                autoFocus
+                className={`w-full rounded-lg border-0 py-2 pl-9 pr-3 text-sm outline-none transition-colors duration-500 ${
+                  dark
+                    ? "bg-white/10 text-white placeholder-white/40 focus:bg-white/15"
+                    : "bg-neutral-100 text-neutral-900 placeholder-neutral-400 focus:bg-neutral-200"
+                }`}
+              />
+            </div>
+
+            <div className="flex-1 space-y-1 overflow-y-auto overscroll-contain">
+              {!categorySearch.trim() && (
+                <Link
+                  href={buildHref({ q, tipo })}
+                  onClick={closeCategoryMenu}
+                  className={`flex items-center justify-between rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-500 ${
+                    !categoria ? "" : theme.pill
+                  }`}
+                  style={!categoria ? { backgroundColor: accent, color: "white" } : undefined}
+                >
+                  Todos
+                  <span className="rounded-full bg-black/20 px-1.5 py-0.5 text-xs">
+                    {categoryCounts.total}
+                  </span>
+                </Link>
+              )}
+              {filteredCategories.map((c) => {
                 const active = categoria === c.slug;
                 const count = categoryCounts.byCategory[c.id] ?? 0;
                 return (
                   <Link
                     key={c.id}
                     href={buildHref({ categoria: c.slug, q, tipo })}
-                    onClick={() => setCategoryMenuOpen(false)}
+                    onClick={closeCategoryMenu}
                     className={`flex items-center justify-between rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-500 ${
                       active ? "" : theme.pill
                     }`}
@@ -382,6 +424,11 @@ export function CatalogShell({
                   </Link>
                 );
               })}
+              {categorySearch.trim() && filteredCategories.length === 0 && (
+                <p className={`px-3 py-6 text-center text-xs ${theme.muted}`}>
+                  Nenhuma categoria encontrada.
+                </p>
+              )}
             </div>
           </div>
         </div>
