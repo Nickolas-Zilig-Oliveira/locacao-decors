@@ -57,18 +57,6 @@ export function CatalogShell({
     setCategorySearch("");
   }
 
-  // Lock background scroll while the category drawer is open — otherwise an
-  // empty drawer list lets the scroll chain to the page behind it, which on
-  // iOS briefly reveals the page's white overscroll edge.
-  useEffect(() => {
-    if (!categoryMenuOpen) return;
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = prevOverflow;
-    };
-  }, [categoryMenuOpen]);
-
   function buildHref(overrides: { categoria?: string; q?: string; tipo?: string }) {
     const params = new URLSearchParams();
     if (overrides.categoria) params.set("categoria", overrides.categoria);
@@ -164,14 +152,6 @@ export function CatalogShell({
         </div>
 
         <div className="ml-auto flex shrink-0 items-center gap-2">
-          {isAdminViewer && (
-            <Link
-              href="/admin"
-              className="flex h-9 items-center rounded-full bg-black/20 px-3 text-xs font-semibold text-white hover:bg-black/30 sm:text-sm"
-            >
-              ← Admin
-            </Link>
-          )}
           {waLink && (
             <a
               href={waLink}
@@ -362,6 +342,15 @@ export function CatalogShell({
           <p className={`py-12 text-center ${theme.muted}`}>Nenhum item encontrado.</p>
         )}
       </main>
+
+      {isAdminViewer && (
+        <Link
+          href="/admin"
+          className="fixed bottom-5 left-5 z-20 flex h-11 items-center gap-1.5 rounded-full bg-neutral-900/90 px-4 text-sm font-semibold text-white shadow-lg backdrop-blur hover:bg-neutral-900"
+        >
+          ← Admin
+        </Link>
+      )}
 
       {categoryMenuOpen && (
         <div className="fixed inset-0 z-50 flex">

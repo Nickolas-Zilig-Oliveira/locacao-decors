@@ -19,7 +19,7 @@ function randomPassword() {
 }
 
 export async function updateTenantStatus(formData: FormData) {
-  if (!(await isPlatformAdmin())) redirect("/super-admin/login");
+  if (!(await isPlatformAdmin())) redirect("/admin/login");
 
   const tenantId = String(formData.get("tenant_id") ?? "");
   const status = String(formData.get("status") ?? "");
@@ -36,7 +36,7 @@ export type CreateTenantResult =
   | { ok: false; error: string };
 
 export async function createTenant(formData: FormData): Promise<CreateTenantResult> {
-  if (!(await isPlatformAdmin())) redirect("/super-admin/login");
+  if (!(await isPlatformAdmin())) redirect("/admin/login");
 
   const name = String(formData.get("name") ?? "").trim();
   const adminEmail = String(formData.get("admin_email") ?? "").trim();
@@ -46,6 +46,9 @@ export async function createTenant(formData: FormData): Promise<CreateTenantResu
 
   if (!name || !adminEmail) {
     return { ok: false, error: "Preencha o nome da loja e o e-mail do admin." };
+  }
+  if (name.length > 15) {
+    return { ok: false, error: "O nome da loja deve ter no máximo 15 caracteres." };
   }
 
   const slug = slugify(name);

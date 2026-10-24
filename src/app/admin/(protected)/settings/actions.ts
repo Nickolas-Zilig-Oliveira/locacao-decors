@@ -15,6 +15,9 @@ export async function updateTenantSettings(
   if (!name) {
     return { error: "O nome da loja é obrigatório." };
   }
+  if (name.length > 15) {
+    return { error: "O nome da loja deve ter no máximo 15 caracteres." };
+  }
 
   const primaryColor = String(formData.get("primary_color") ?? "").trim() || "#111111";
   const logoUrl = String(formData.get("logo_url") ?? "").trim();

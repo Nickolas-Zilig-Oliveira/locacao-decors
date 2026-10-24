@@ -67,9 +67,11 @@ export function NewTenantForm() {
           <input
             name="name"
             required
-            placeholder="Ex: Festa Perfeita Decorações"
+            maxLength={15}
+            placeholder="Ex: Festa Perfeita"
             className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
           />
+          <p className="mt-1 text-[11px] text-neutral-400">Máx. 15 caracteres.</p>
         </div>
         <div>
           <label className="mb-1 block text-xs font-medium text-neutral-500">E-mail do login da loja</label>

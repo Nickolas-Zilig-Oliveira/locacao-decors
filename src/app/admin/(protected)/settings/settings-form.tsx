@@ -81,8 +81,12 @@ export function SettingsForm({ tenant }: { tenant: Tenant }) {
               name="name"
               defaultValue={tenant.name}
               required
+              maxLength={15}
               className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
             />
+            <p className="mt-1 text-[11px] text-neutral-400">
+              Máx. 15 caracteres — nome curto cabe melhor no topo da vitrine.
+            </p>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">

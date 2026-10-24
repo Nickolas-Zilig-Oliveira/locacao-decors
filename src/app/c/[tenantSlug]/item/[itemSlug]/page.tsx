@@ -31,19 +31,20 @@ export default async function ItemPage({
     <div className="min-h-screen text-white" style={{ backgroundColor: pageBg }}>
       <IosBackgroundSync color={pageBg} />
       <header
-        className="sticky top-0 z-10 flex items-center justify-between gap-3 px-4 pb-3 shadow-lg sm:px-6 lg:px-8"
+        className="sticky top-0 z-10 flex items-center gap-3 px-4 pb-3 shadow-lg sm:px-6 lg:px-8"
         style={{ backgroundColor: accent, paddingTop: "max(0.75rem, env(safe-area-inset-top))" }}
       >
         <h1 className="truncate text-lg font-bold uppercase tracking-wide">{tenant.name}</h1>
-        {isAdminViewer && (
-          <Link
-            href="/admin"
-            className="flex h-9 shrink-0 items-center rounded-full bg-black/20 px-3 text-xs font-semibold hover:bg-black/30"
-          >
-            ← Admin
-          </Link>
-        )}
       </header>
+
+      {isAdminViewer && (
+        <Link
+          href="/admin"
+          className="fixed bottom-5 left-5 z-20 flex h-11 items-center gap-1.5 rounded-full bg-neutral-900/90 px-4 text-sm font-semibold text-white shadow-lg backdrop-blur hover:bg-neutral-900"
+        >
+          ← Admin
+        </Link>
+      )}
 
       <main className="mx-auto max-w-3xl px-4 py-8 pb-28 sm:px-6 lg:px-8">
         <Link href={`/c/${tenantSlug}`} className="text-sm text-white/60 hover:underline">
