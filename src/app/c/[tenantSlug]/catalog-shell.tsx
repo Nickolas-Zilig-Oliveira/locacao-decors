@@ -124,7 +124,7 @@ export function CatalogShell({
 
   return (
     <div
-      className={`transition-colors duration-500 ${theme.text}`}
+      className={`flex min-h-screen flex-col transition-colors duration-500 ${theme.text}`}
       style={{ backgroundColor: pageBg }}
     >
       <header
@@ -199,7 +199,7 @@ export function CatalogShell({
         )}
       </header>
 
-      <main className="mx-auto max-w-6xl px-4 py-5 sm:px-6 lg:px-8">
+      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-5 sm:px-6 lg:px-8">
         <div className="mb-4 flex items-center gap-2">
           <button
             type="button"

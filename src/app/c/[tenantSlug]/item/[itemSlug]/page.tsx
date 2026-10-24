@@ -29,7 +29,7 @@ export default async function ItemPage({
   const pageBg = `color-mix(in srgb, ${accent} 16%, #0b0b0d)`;
 
   return (
-    <div className="text-white" style={{ backgroundColor: pageBg }}>
+    <div className="flex min-h-screen flex-col text-white" style={{ backgroundColor: pageBg }}>
       <IosBackgroundSync color={pageBg} />
       <header
         className="sticky top-0 z-10 flex items-center gap-3 px-4 pb-3 shadow-lg sm:px-6 lg:px-8"
@@ -38,7 +38,7 @@ export default async function ItemPage({
         <h1 className="truncate text-lg font-bold uppercase tracking-wide">{tenant.name}</h1>
       </header>
 
-      <main className="mx-auto max-w-3xl px-4 py-8 pb-28 sm:px-6 lg:px-8">
+      <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-8 pb-28 sm:px-6 lg:px-8">
         <Link href={`/c/${tenantSlug}`} className="text-sm text-white/60 hover:underline">
           ← Voltar
         </Link>
