@@ -38,15 +38,6 @@ export default async function ItemPage({
         <h1 className="truncate text-lg font-bold uppercase tracking-wide">{tenant.name}</h1>
       </header>
 
-      {isAdminViewer && (
-        <Link
-          href="/admin"
-          className="fixed bottom-5 left-5 z-20 flex h-11 items-center gap-1.5 rounded-full bg-neutral-900/90 px-4 text-sm font-semibold text-white shadow-lg backdrop-blur hover:bg-neutral-900"
-        >
-          ← Admin
-        </Link>
-      )}
-
       <main className="mx-auto max-w-3xl px-4 py-8 pb-28 sm:px-6 lg:px-8">
         <Link href={`/c/${tenantSlug}`} className="text-sm text-white/60 hover:underline">
           ← Voltar
@@ -108,7 +99,18 @@ export default async function ItemPage({
         />
       </main>
 
-      <SiteFooter tenantName={tenant.name} instagram={tenant.instagram} extraBottomSpace={isAdminViewer} />
+      <SiteFooter tenantName={tenant.name} instagram={tenant.instagram} />
+
+      {isAdminViewer && (
+        <div className="flex justify-center border-t border-white/10 px-4 py-4">
+          <Link
+            href="/admin"
+            className="flex h-9 items-center gap-1.5 rounded-full bg-neutral-900 px-4 text-sm font-semibold text-white hover:bg-neutral-800"
+          >
+            ← Voltar pro admin
+          </Link>
+        </div>
+      )}
 
       <WhatsappButton href={wa} />
     </div>

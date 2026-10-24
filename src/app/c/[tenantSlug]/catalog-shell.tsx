@@ -199,7 +199,7 @@ export function CatalogShell({
         )}
       </header>
 
-      <main className="mx-auto max-w-6xl px-4 py-5 pb-16 sm:px-6 lg:px-8">
+      <main className="mx-auto max-w-6xl px-4 py-5 sm:px-6 lg:px-8">
         <div className="mb-4 flex items-center gap-2">
           <button
             type="button"
@@ -344,20 +344,17 @@ export function CatalogShell({
         )}
       </main>
 
-      <SiteFooter
-        tenantName={tenant.name}
-        instagram={tenant.instagram}
-        dark={dark}
-        extraBottomSpace={isAdminViewer}
-      />
+      <SiteFooter tenantName={tenant.name} instagram={tenant.instagram} dark={dark} />
 
       {isAdminViewer && (
-        <Link
-          href="/admin"
-          className="fixed bottom-5 left-5 z-20 flex h-11 items-center gap-1.5 rounded-full bg-neutral-900/90 px-4 text-sm font-semibold text-white shadow-lg backdrop-blur hover:bg-neutral-900"
-        >
-          ← Admin
-        </Link>
+        <div className={`flex justify-center border-t px-4 py-4 transition-colors duration-500 ${dark ? "border-white/10" : "border-neutral-200"}`}>
+          <Link
+            href="/admin"
+            className="flex h-9 items-center gap-1.5 rounded-full bg-neutral-900 px-4 text-sm font-semibold text-white hover:bg-neutral-800"
+          >
+            ← Voltar pro admin
+          </Link>
+        </div>
       )}
 
       {categoryMenuOpen && (

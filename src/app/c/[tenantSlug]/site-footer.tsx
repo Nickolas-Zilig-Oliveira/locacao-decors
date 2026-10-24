@@ -5,13 +5,10 @@ export function SiteFooter({
   tenantName,
   instagram,
   dark = true,
-  extraBottomSpace = false,
 }: {
   tenantName: string;
   instagram: string | null;
   dark?: boolean;
-  /** Adds clearance so a floating button (e.g. the admin pill) doesn't cover the text. */
-  extraBottomSpace?: boolean;
 }) {
   const ig = instagramLink(instagram);
   const muted = dark ? "text-white/40" : "text-neutral-500";
@@ -19,11 +16,7 @@ export function SiteFooter({
   const border = dark ? "border-white/10" : "border-neutral-200";
 
   return (
-    <footer
-      className={`border-t px-4 pt-6 text-center transition-colors duration-500 ${border} ${
-        extraBottomSpace ? "pb-20" : "pb-6"
-      }`}
-    >
+    <footer className={`border-t px-4 py-6 text-center transition-colors duration-500 ${border}`}>
       {ig && (
         <a
           href={ig}
