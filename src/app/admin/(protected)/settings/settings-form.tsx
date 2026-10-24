@@ -173,6 +173,35 @@ export function SettingsForm({ tenant }: { tenant: Tenant }) {
         </section>
       </div>
 
+      <section className="space-y-4 rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
+        <div>
+          <p className="text-sm font-semibold text-neutral-900">Responsável pela loja</p>
+          <p className="text-xs text-neutral-400">
+            Usado pela Ziliglasis para falar com você sobre a conta — não aparece na vitrine.
+          </p>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label className="mb-1 block text-xs font-medium text-neutral-500">Seu nome</label>
+            <input
+              name="owner_name"
+              defaultValue={tenant.owner_name ?? ""}
+              placeholder="Nome completo"
+              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-xs font-medium text-neutral-500">Seu WhatsApp</label>
+            <input
+              name="owner_phone"
+              defaultValue={tenant.owner_phone ?? ""}
+              placeholder="(11) 90000-0000"
+              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
+            />
+          </div>
+        </div>
+      </section>
+
       {error && <p className="text-sm text-red-600">{error}</p>}
       {success && <p className="text-sm text-green-600">Configurações salvas.</p>}
 

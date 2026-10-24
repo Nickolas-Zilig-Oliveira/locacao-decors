@@ -33,6 +33,8 @@ export async function updateTenantSettings(
       pickup_notes: String(formData.get("pickup_notes") ?? "").trim() || null,
       primary_color: primaryColor,
       logo_url: logoUrl || null,
+      owner_name: String(formData.get("owner_name") ?? "").trim() || null,
+      owner_phone: String(formData.get("owner_phone") ?? "").trim() || null,
     })
     .eq("id", tenant!.id);
 

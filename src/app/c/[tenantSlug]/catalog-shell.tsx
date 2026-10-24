@@ -24,6 +24,7 @@ type Props = {
   categoria?: string;
   q?: string;
   waLink: string | null;
+  isAdminViewer?: boolean;
 };
 
 export function CatalogShell({
@@ -35,6 +36,7 @@ export function CatalogShell({
   categoria,
   q,
   waLink,
+  isAdminViewer,
 }: Props) {
   const [dark, setDark] = useState(true);
   const [canScroll, setCanScroll] = useState(false);
@@ -119,6 +121,14 @@ export function CatalogShell({
         </div>
 
         <div className="ml-auto flex items-center gap-2">
+          {isAdminViewer && (
+            <Link
+              href="/admin"
+              className="rounded-full bg-black/20 px-3 py-1.5 text-xs font-semibold text-white hover:bg-black/30 sm:text-sm"
+            >
+              ← Voltar pro admin
+            </Link>
+          )}
           {waLink && (
             <a
               href={waLink}

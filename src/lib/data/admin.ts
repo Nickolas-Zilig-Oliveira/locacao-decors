@@ -25,6 +25,22 @@ export async function getCurrentTenant(): Promise<Tenant | null> {
   return tenant;
 }
 
+/** True when the currently signed-in user is an admin of the given tenant. */
+export async function isCurrentUserTenantAdmin(tenantId: string): Promise<boolean> {
+  const supabase = await createClient();
+  const { data: auth } = await supabase.auth.getUser();
+  if (!auth.user) return false;
+
+  const { data } = await supabase
+    .from("tenant_users")
+    .select("tenant_id")
+    .eq("tenant_id", tenantId)
+    .eq("user_id", auth.user.id)
+    .maybeSingle();
+
+  return !!data;
+}
+
 export async function getAdminCategories(tenantId: string): Promise<Category[]> {
   const supabase = await createClient();
   const { data } = await supabase

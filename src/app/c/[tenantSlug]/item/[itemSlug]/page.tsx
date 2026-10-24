@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getBlockedDates, getItemBySlug, getTenantBySlug } from "@/lib/data/catalog";
+import { isCurrentUserTenantAdmin } from "@/lib/data/admin";
 import { whatsappLink } from "@/lib/whatsapp";
 import { WhatsappButton } from "../../whatsapp-button";
 import { IosBackgroundSync } from "../../ios-background-sync";
@@ -22,6 +23,7 @@ export default async function ItemPage({
   const blockedDates = await getBlockedDates(item.id);
   const accent = tenant.primary_color;
   const wa = whatsappLink(tenant.phone, `Olá! Tenho interesse em "${item.name}".`);
+  const isAdminViewer = await isCurrentUserTenantAdmin(tenant.id);
 
   const pageBg = `color-mix(in srgb, ${accent} 16%, #0b0b0d)`;
 
@@ -29,10 +31,18 @@ export default async function ItemPage({
     <div className="min-h-screen text-white" style={{ backgroundColor: pageBg }}>
       <IosBackgroundSync color={pageBg} />
       <header
-        className="px-4 pb-3 shadow-lg sm:px-6 lg:px-8"
+        className="flex items-center justify-between gap-3 px-4 pb-3 shadow-lg sm:px-6 lg:px-8"
         style={{ backgroundColor: accent, paddingTop: "max(0.75rem, env(safe-area-inset-top))" }}
       >
         <h1 className="truncate text-lg font-bold uppercase tracking-wide">{tenant.name}</h1>
+        {isAdminViewer && (
+          <Link
+            href="/admin"
+            className="shrink-0 rounded-full bg-black/20 px-3 py-1.5 text-xs font-semibold hover:bg-black/30"
+          >
+            ← Voltar pro admin
+          </Link>
+        )}
       </header>
 
       <main className="mx-auto max-w-3xl px-4 py-8 pb-28 sm:px-6 lg:px-8">

@@ -41,6 +41,8 @@ export async function createTenant(formData: FormData): Promise<CreateTenantResu
   const name = String(formData.get("name") ?? "").trim();
   const adminEmail = String(formData.get("admin_email") ?? "").trim();
   const primaryColor = String(formData.get("primary_color") ?? "").trim() || "#9d174d";
+  const ownerName = String(formData.get("owner_name") ?? "").trim() || null;
+  const ownerPhone = String(formData.get("owner_phone") ?? "").trim() || null;
 
   if (!name || !adminEmail) {
     return { ok: false, error: "Preencha o nome da loja e o e-mail do admin." };
@@ -59,6 +61,8 @@ export async function createTenant(formData: FormData): Promise<CreateTenantResu
       primary_color: primaryColor,
       active: true,
       subscription_status: "pending",
+      owner_name: ownerName,
+      owner_phone: ownerPhone,
     })
     .select("id")
     .single();

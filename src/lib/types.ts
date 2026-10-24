@@ -15,6 +15,8 @@ export type Tenant = {
   subscription_status: "pending" | "active" | "suspended";
   notes: string | null;
   created_at: string;
+  owner_name: string | null;
+  owner_phone: string | null;
 };
 
 export type QuoteItem = {

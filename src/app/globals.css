@@ -22,3 +22,14 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* iOS Safari auto-zooms the page when you focus an input whose font-size is
+   under 16px. Force 16px on mobile widths only, so desktop keeps its
+   smaller text-sm inputs. */
+@media (max-width: 767px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
