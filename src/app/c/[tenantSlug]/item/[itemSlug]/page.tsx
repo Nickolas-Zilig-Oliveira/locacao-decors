@@ -102,14 +102,12 @@ export default async function ItemPage({
       <SiteFooter tenantName={tenant.name} instagram={tenant.instagram} />
 
       {isAdminViewer && (
-        <div className="flex justify-center border-t border-white/10 px-4 py-4">
-          <Link
-            href="/admin"
-            className="flex h-9 items-center gap-1.5 rounded-full bg-neutral-900 px-4 text-sm font-semibold text-white hover:bg-neutral-800"
-          >
-            ← Voltar pro admin
-          </Link>
-        </div>
+        <Link
+          href="/admin"
+          className="fixed bottom-5 left-5 z-20 flex h-10 items-center gap-1.5 rounded-full bg-neutral-900/90 px-4 text-sm font-semibold text-white shadow-lg backdrop-blur hover:bg-neutral-900"
+        >
+          ← Admin
+        </Link>
       )}
 
       <WhatsappButton href={wa} />
