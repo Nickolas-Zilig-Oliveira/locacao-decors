@@ -41,6 +41,7 @@ export function CatalogShell({
   isAdminViewer,
 }: Props) {
   const [dark, setDark] = useState(true);
+  const [searchOpen, setSearchOpen] = useState(() => Boolean(q));
   const [canScroll, setCanScroll] = useState(false);
   const [categoryMenuOpen, setCategoryMenuOpen] = useState(false);
   const [categorySearch, setCategorySearch] = useState("");
@@ -162,18 +163,14 @@ export function CatalogShell({
               ← Admin
             </Link>
           )}
-          <form action={`/c/${tenantSlug}`} className="relative hidden sm:block">
-            {categoria && <input type="hidden" name="categoria" value={categoria} />}
-            {tipo && <input type="hidden" name="tipo" value={tipo} />}
-            <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/70" />
-            <input
-              type="search"
-              name="q"
-              defaultValue={q}
-              placeholder="Buscar produtos..."
-              className="w-48 rounded-full border-0 bg-black/20 py-1.5 pl-9 pr-4 text-sm text-white placeholder-white/60 outline-none focus:bg-black/30 lg:w-56"
-            />
-          </form>
+          <button
+            type="button"
+            onClick={() => setSearchOpen((v) => !v)}
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-black/20 text-white transition-colors hover:bg-black/30"
+            aria-label={searchOpen ? "Fechar busca" : "Buscar produtos"}
+          >
+            {searchOpen ? <CloseIcon className="h-4 w-4" /> : <SearchIcon className="h-4 w-4" />}
+          </button>
           <button
             type="button"
             onClick={() => setDark((v) => !v)}
@@ -184,27 +181,24 @@ export function CatalogShell({
           </button>
         </div>
 
-        <form action={`/c/${tenantSlug}`} className="relative w-full sm:hidden">
-          {categoria && <input type="hidden" name="categoria" value={categoria} />}
-          {tipo && <input type="hidden" name="tipo" value={tipo} />}
-          <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/70" />
-          <input
-            type="search"
-            name="q"
-            defaultValue={q}
-            placeholder="Buscar produtos..."
-            className="w-full rounded-full border-0 bg-black/20 py-2 pl-9 pr-4 text-sm text-white placeholder-white/60 outline-none"
-          />
-        </form>
+        {searchOpen && (
+          <form action={`/c/${tenantSlug}`} className="relative w-full">
+            {categoria && <input type="hidden" name="categoria" value={categoria} />}
+            {tipo && <input type="hidden" name="tipo" value={tipo} />}
+            <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/70" />
+            <input
+              type="search"
+              name="q"
+              defaultValue={q}
+              placeholder="Buscar produtos..."
+              autoFocus
+              className="w-full rounded-full border-0 bg-black/20 py-2 pl-9 pr-4 text-sm text-white placeholder-white/60 outline-none focus:bg-black/30"
+            />
+          </form>
+        )}
       </header>
 
       <main className="mx-auto max-w-6xl px-4 py-5 pb-28 sm:px-6 lg:px-8">
-        {tenant.description && (
-          <p className={`mb-4 text-sm transition-colors duration-500 ${theme.softText}`}>
-            {tenant.description}
-          </p>
-        )}
-
         <div className="mb-4 flex items-center gap-2">
           <button
             type="button"
@@ -215,7 +209,7 @@ export function CatalogShell({
             <MenuIcon className="h-4 w-4" />
           </button>
 
-          <div ref={scrollerRef} className="flex flex-1 gap-2 overflow-x-auto scroll-smooth pb-1">
+          <div ref={scrollerRef} className="no-scrollbar flex flex-1 gap-2 overflow-x-auto scroll-smooth">
             <Link
               href={buildHref({ q, tipo })}
               className={`shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition-colors duration-500 ${
