@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import type { Category, Item, ItemComponent, KitComponentCatalogEntry } from "@/lib/types";
 import { createClient } from "@/lib/supabase/client";
 import { formatMoneyTyping, moneyToDisplay, parseMoneyTyping } from "@/lib/masks";
+import { validateImageFile } from "@/lib/upload";
 import { saveItem } from "./actions";
 
 function blockNonNumericKeys(e: React.KeyboardEvent<HTMLInputElement>) {
@@ -47,6 +48,13 @@ export function ItemForm({
     const file = e.target.files?.[0];
     if (!file) return;
 
+    const invalidReason = validateImageFile(file);
+    if (invalidReason) {
+      setError(invalidReason);
+      e.target.value = "";
+      return;
+    }
+
     setIsUploading(true);
     setError(null);
     try {
@@ -61,6 +69,13 @@ export function ItemForm({
   async function handleComponentPhotoChange(index: number, e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    const invalidReason = validateImageFile(file);
+    if (invalidReason) {
+      setError(invalidReason);
+      e.target.value = "";
+      return;
+    }
 
     setUploadingComponent(index);
     setError(null);

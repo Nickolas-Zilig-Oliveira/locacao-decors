@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import type { Tenant } from "@/lib/types";
 import { createClient } from "@/lib/supabase/client";
 import { formatCNPJ, formatPhone } from "@/lib/masks";
+import { validateImageFile } from "@/lib/upload";
 import { updateTenantSettings } from "./actions";
 
 export function SettingsForm({ tenant }: { tenant: Tenant }) {
@@ -16,6 +17,13 @@ export function SettingsForm({ tenant }: { tenant: Tenant }) {
   async function handleLogoChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    const invalidReason = validateImageFile(file);
+    if (invalidReason) {
+      setError(invalidReason);
+      e.target.value = "";
+      return;
+    }
 
     setIsUploading(true);
     setError(null);
