@@ -198,7 +198,7 @@ export function CatalogShell({
         )}
       </header>
 
-      <main className="mx-auto max-w-6xl px-4 py-5 pb-28 sm:px-6 lg:px-8">
+      <main className="mx-auto max-w-6xl px-4 py-5 pb-16 sm:px-6 lg:px-8">
         <div className="mb-4 flex items-center gap-2">
           <button
             type="button"
