@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentTenant } from "@/lib/data/admin";
+import { parseMoneyTyping } from "@/lib/masks";
 
 function slugify(text: string) {
   return text
@@ -58,7 +59,7 @@ export async function saveItem(formData: FormData): Promise<{ error: string } | 
 
   const id = String(formData.get("id") ?? "");
   const name = String(formData.get("name") ?? "").trim();
-  const price = Number(formData.get("price") ?? 0);
+  const price = parseMoneyTyping(String(formData.get("price") ?? "0"));
   const pieceCount = formData.get("piece_count")
     ? Number(formData.get("piece_count"))
     : null;

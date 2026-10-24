@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState, useTransition } from "react";
 import type { Item, QuoteItem } from "@/lib/types";
 import { quoteTotals } from "@/lib/contract-terms";
-import { formatCPF, formatPhone } from "@/lib/masks";
+import { formatCPF, formatPhone, moneyToDisplay, parseMoneyTyping } from "@/lib/masks";
 import { createQuote } from "../actions";
 
 function blockNonNumericKeys(e: React.KeyboardEvent<HTMLInputElement>) {
@@ -227,13 +227,10 @@ export function QuoteBuilder({
                   Preço (R$)
                 </label>
                 <input
-                  type="number"
+                  type="text"
                   inputMode="decimal"
-                  step="0.01"
-                  min={0}
-                  onKeyDown={blockNonNumericKeys}
-                  value={line.unit_price}
-                  onChange={(e) => updateLine(i, { unit_price: Number(e.target.value) || 0 })}
+                  value={moneyToDisplay(line.unit_price)}
+                  onChange={(e) => updateLine(i, { unit_price: parseMoneyTyping(e.target.value) })}
                   className="w-full rounded border border-neutral-300 px-2 py-1.5 text-sm"
                 />
               </div>
@@ -269,28 +266,24 @@ export function QuoteBuilder({
               Desconto / promoção (R$)
             </label>
             <input
-              type="number"
+              type="text"
               inputMode="decimal"
-              step="0.01"
               name="discount"
-              onKeyDown={blockNonNumericKeys}
-              value={discount === 0 ? "" : discount}
+              value={discount === 0 ? "" : moneyToDisplay(discount)}
               placeholder="0,00"
-              onChange={(e) => setDiscount(e.target.value === "" ? 0 : Number(e.target.value) || 0)}
+              onChange={(e) => setDiscount(parseMoneyTyping(e.target.value))}
               className="w-full rounded border border-neutral-300 px-3 py-2 text-sm"
             />
           </div>
           <div>
             <label className="mb-1 block text-sm font-medium">Valor já pago (R$)</label>
             <input
-              type="number"
+              type="text"
               inputMode="decimal"
-              step="0.01"
               name="paid_amount"
-              onKeyDown={blockNonNumericKeys}
-              value={paidAmount === 0 ? "" : paidAmount}
+              value={paidAmount === 0 ? "" : moneyToDisplay(paidAmount)}
               placeholder="0,00"
-              onChange={(e) => setPaidAmount(e.target.value === "" ? 0 : Number(e.target.value) || 0)}
+              onChange={(e) => setPaidAmount(parseMoneyTyping(e.target.value))}
               className="w-full rounded border border-neutral-300 px-3 py-2 text-sm"
             />
           </div>

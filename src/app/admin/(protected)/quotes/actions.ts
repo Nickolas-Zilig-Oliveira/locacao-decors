@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentTenant } from "@/lib/data/admin";
+import { parseMoneyTyping } from "@/lib/masks";
 import type { QuoteItem } from "@/lib/types";
 
 export type SaveQuoteResult = { ok: true; id: string } | { ok: false; error: string };
@@ -44,8 +45,8 @@ export async function createQuote(formData: FormData): Promise<SaveQuoteResult> 
       theme: String(formData.get("theme") ?? "").trim() || null,
       items,
       items_note: String(formData.get("items_note") ?? "").trim() || null,
-      discount: Number(formData.get("discount") ?? 0) || 0,
-      paid_amount: Number(formData.get("paid_amount") ?? 0) || 0,
+      discount: parseMoneyTyping(String(formData.get("discount") ?? "0")),
+      paid_amount: parseMoneyTyping(String(formData.get("paid_amount") ?? "0")),
       notes: String(formData.get("notes") ?? "").trim() || null,
     })
     .select("id")

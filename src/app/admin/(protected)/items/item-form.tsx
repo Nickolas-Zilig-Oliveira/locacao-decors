@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import type { Category, Item, ItemComponent, KitComponentCatalogEntry } from "@/lib/types";
 import { createClient } from "@/lib/supabase/client";
+import { formatMoneyTyping, moneyToDisplay, parseMoneyTyping } from "@/lib/masks";
 import { saveItem } from "./actions";
 
 function blockNonNumericKeys(e: React.KeyboardEvent<HTMLInputElement>) {
@@ -161,13 +162,13 @@ export function ItemForm({
             <div>
               <label className="mb-1 block text-xs font-medium text-neutral-500">Preço (R$)</label>
               <input
-                type="number"
+                type="text"
                 inputMode="decimal"
                 name="price"
-                step="0.01"
-                min="0"
-                onKeyDown={blockNonNumericKeys}
-                defaultValue={item?.price}
+                defaultValue={item ? moneyToDisplay(item.price) : ""}
+                onChange={(e) => {
+                  e.target.value = formatMoneyTyping(e.target.value);
+                }}
                 placeholder="0,00"
                 required
                 className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
@@ -279,17 +280,15 @@ export function ItemForm({
                 <div>
                   <label className="mb-0.5 block text-[10px] font-medium text-neutral-400">Valor (R$)</label>
                   <input
-                    type="number"
+                    type="text"
                     inputMode="decimal"
-                    step="0.01"
-                    min={0}
-                    onKeyDown={blockNonNumericKeys}
-                    value={c.unit_price ?? ""}
-                    onChange={(e) =>
+                    value={c.unit_price != null ? moneyToDisplay(c.unit_price) : ""}
+                    onChange={(e) => {
+                      const hasDigits = /\d/.test(e.target.value);
                       updateComponent(i, {
-                        unit_price: e.target.value === "" ? undefined : Number(e.target.value),
-                      })
-                    }
+                        unit_price: hasDigits ? parseMoneyTyping(e.target.value) : undefined,
+                      });
+                    }}
                     placeholder="0,00"
                     className="w-full rounded-lg border border-neutral-300 px-2 py-1.5 text-sm focus:border-neutral-900 focus:outline-none"
                   />
@@ -297,17 +296,15 @@ export function ItemForm({
                 <div>
                   <label className="mb-0.5 block text-[10px] font-medium text-neutral-400">Reposição (R$)</label>
                   <input
-                    type="number"
+                    type="text"
                     inputMode="decimal"
-                    step="0.01"
-                    min={0}
-                    onKeyDown={blockNonNumericKeys}
-                    value={c.replacement_value ?? ""}
-                    onChange={(e) =>
+                    value={c.replacement_value != null ? moneyToDisplay(c.replacement_value) : ""}
+                    onChange={(e) => {
+                      const hasDigits = /\d/.test(e.target.value);
                       updateComponent(i, {
-                        replacement_value: e.target.value === "" ? undefined : Number(e.target.value),
-                      })
-                    }
+                        replacement_value: hasDigits ? parseMoneyTyping(e.target.value) : undefined,
+                      });
+                    }}
                     placeholder="0,00"
                     className="w-full rounded-lg border border-neutral-300 px-2 py-1.5 text-sm focus:border-neutral-900 focus:outline-none"
                   />
