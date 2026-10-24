@@ -25,6 +25,13 @@ export function ItemForm({
   const [isUploading, setIsUploading] = useState(false);
   const [components, setComponents] = useState<ItemComponent[]>(item?.components ?? []);
   const [uploadingComponent, setUploadingComponent] = useState<number | null>(null);
+  const [suggestFor, setSuggestFor] = useState<number | null>(null);
+
+  function componentSuggestions(query: string) {
+    const q = query.trim().toLowerCase();
+    if (!q) return [];
+    return existingComponents.filter((c) => c.name.toLowerCase().includes(q)).slice(0, 6);
+  }
 
   async function uploadToStorage(file: File) {
     const supabase = createClient();
@@ -102,11 +109,6 @@ export function ItemForm({
   return (
     <form action={handleSubmit} className="max-w-3xl space-y-5">
       {item && <input type="hidden" name="id" value={item.id} />}
-      <datalist id="kit-components-list">
-        {existingComponents.map((c) => (
-          <option key={c.name} value={c.name} />
-        ))}
-      </datalist>
 
       <div className="grid gap-5 lg:grid-cols-[220px_1fr]">
         {/* Photo */}
@@ -247,14 +249,43 @@ export function ItemForm({
                     onChange={(e) => handleComponentPhotoChange(i, e)}
                   />
                 </label>
-                <div className="min-w-[140px] flex-1">
+                <div className="relative min-w-[140px] flex-1">
                   <input
                     value={c.name}
-                    onChange={(e) => handleComponentNameChange(i, e.target.value)}
+                    onChange={(e) => {
+                      handleComponentNameChange(i, e.target.value);
+                      setSuggestFor(i);
+                    }}
+                    onFocus={() => setSuggestFor(i)}
+                    onBlur={() => setSuggestFor((v) => (v === i ? null : v))}
                     placeholder="Ex: Urso Frederico"
-                    list="kit-components-list"
+                    autoComplete="off"
                     className="w-full rounded-lg border border-neutral-300 px-3 py-1.5 text-sm focus:border-neutral-900 focus:outline-none"
                   />
+                  {suggestFor === i && componentSuggestions(c.name).length > 0 && (
+                    <div className="absolute left-0 right-0 top-full z-10 mt-1 max-h-48 overflow-y-auto rounded-lg border border-neutral-200 bg-white shadow-lg">
+                      {componentSuggestions(c.name).map((s) => (
+                        <button
+                          key={s.name}
+                          type="button"
+                          onMouseDown={(e) => e.preventDefault()}
+                          onClick={() => {
+                            handleComponentNameChange(i, s.name);
+                            setSuggestFor(null);
+                          }}
+                          className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-neutral-50"
+                        >
+                          <span className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded bg-neutral-100">
+                            {s.photo_url && (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img src={s.photo_url} alt="" className="h-full w-full object-cover" />
+                            )}
+                          </span>
+                          <span className="truncate">{s.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 <button
                   type="button"
