@@ -66,12 +66,15 @@ export function AdminTopBar({ tenant, tenantSlug, onLogout }: NavProps) {
   return (
     <div className="lg:hidden">
       <div
-        className="flex w-full items-center justify-between px-4 py-3 text-white shadow-lg"
-        style={{ backgroundColor: tenant.primary_color }}
+        className="sticky top-0 z-30 flex w-full items-center justify-between gap-3 px-4 pb-3 text-white shadow-md"
+        style={{
+          backgroundColor: tenant.primary_color,
+          paddingTop: "max(0.75rem, env(safe-area-inset-top))",
+        }}
       >
-        <div className="flex items-center gap-2">
+        <div className="flex min-w-0 items-center gap-2">
           <div
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-xs font-bold"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-xs font-bold"
             style={{ color: tenant.primary_color }}
           >
             {tenant.name.charAt(0).toUpperCase()}
@@ -81,7 +84,7 @@ export function AdminTopBar({ tenant, tenantSlug, onLogout }: NavProps) {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="flex h-9 w-9 items-center justify-center rounded-lg bg-black/20"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-black/20 active:bg-black/30"
           aria-label="Abrir menu"
         >
           <MenuIcon className="h-5 w-5" />

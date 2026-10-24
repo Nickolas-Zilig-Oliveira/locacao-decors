@@ -131,24 +131,14 @@ export function CatalogShell({
           </h1>
         </div>
 
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ml-auto flex shrink-0 items-center gap-2">
           {isAdminViewer && (
             <Link
               href="/admin"
-              className="rounded-full bg-black/20 px-3 py-1.5 text-xs font-semibold text-white hover:bg-black/30 sm:text-sm"
+              className="flex h-9 items-center rounded-full bg-black/20 px-3 text-xs font-semibold text-white hover:bg-black/30 sm:text-sm"
             >
-              ← Voltar pro admin
+              ← Admin
             </Link>
-          )}
-          {waLink && (
-            <a
-              href={waLink}
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-full bg-green-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-green-600 sm:text-sm"
-            >
-              Fale conosco
-            </a>
           )}
           <form action={`/c/${tenantSlug}`} className="relative hidden sm:block">
             {categoria && <input type="hidden" name="categoria" value={categoria} />}
@@ -165,7 +155,7 @@ export function CatalogShell({
           <button
             type="button"
             onClick={() => setDark((v) => !v)}
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-black/20 text-white transition-colors hover:bg-black/30"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-black/20 text-white transition-colors hover:bg-black/30"
             aria-label="Alternar tema"
           >
             {dark ? <SunIcon className="h-4 w-4" /> : <MoonIcon className="h-4 w-4" />}

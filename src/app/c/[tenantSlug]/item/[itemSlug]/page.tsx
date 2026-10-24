@@ -31,16 +31,16 @@ export default async function ItemPage({
     <div className="min-h-screen text-white" style={{ backgroundColor: pageBg }}>
       <IosBackgroundSync color={pageBg} />
       <header
-        className="flex items-center justify-between gap-3 px-4 pb-3 shadow-lg sm:px-6 lg:px-8"
+        className="sticky top-0 z-10 flex items-center justify-between gap-3 px-4 pb-3 shadow-lg sm:px-6 lg:px-8"
         style={{ backgroundColor: accent, paddingTop: "max(0.75rem, env(safe-area-inset-top))" }}
       >
         <h1 className="truncate text-lg font-bold uppercase tracking-wide">{tenant.name}</h1>
         {isAdminViewer && (
           <Link
             href="/admin"
-            className="shrink-0 rounded-full bg-black/20 px-3 py-1.5 text-xs font-semibold hover:bg-black/30"
+            className="flex h-9 shrink-0 items-center rounded-full bg-black/20 px-3 text-xs font-semibold hover:bg-black/30"
           >
-            ← Voltar pro admin
+            ← Admin
           </Link>
         )}
       </header>

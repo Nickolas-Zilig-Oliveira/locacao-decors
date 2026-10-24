@@ -11,14 +11,14 @@ export default async function AdminQuotesPage() {
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
-        <div>
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0">
           <h1 className="text-xl font-bold text-neutral-900">Contratos</h1>
           <p className="text-sm text-neutral-500">Contratos gerados manualmente, prontos em PDF.</p>
         </div>
         <Link
           href="/admin/quotes/new"
-          className="rounded-full bg-neutral-900 px-4 py-2 text-sm font-semibold text-white hover:bg-neutral-800"
+          className="shrink-0 whitespace-nowrap rounded-full bg-neutral-900 px-4 py-2 text-center text-sm font-semibold text-white hover:bg-neutral-800"
         >
           + Novo contrato
         </Link>
@@ -31,25 +31,30 @@ export default async function AdminQuotesPage() {
             <Link
               key={q.id}
               href={`/admin/quotes/${q.id}`}
-              className="flex items-center justify-between rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm transition hover:border-neutral-300"
+              className="flex items-start justify-between gap-3 rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm transition hover:border-neutral-300"
             >
-              <div>
-                <p className="font-semibold text-neutral-900">
+              <div className="min-w-0">
+                <p className="truncate font-semibold text-neutral-900">
                   Contrato #{q.number} · {q.customer_name}
                 </p>
-                <p className="text-sm text-neutral-500">
+                <p className="truncate text-sm text-neutral-500">
                   {q.theme ?? "—"} · {q.items.length} {q.items.length === 1 ? "item" : "itens"} · R${" "}
                   {total.toFixed(2).replace(".", ",")}
                 </p>
               </div>
-              <div className="text-right">
+              <div className="shrink-0 text-right">
                 <span
-                  className={`rounded-full px-2.5 py-1 text-xs font-medium ${
+                  className={`inline-block whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium ${
                     toReceive > 0 ? "bg-amber-50 text-amber-700" : "bg-green-50 text-green-700"
                   }`}
                 >
-                  {toReceive > 0 ? `R$ ${toReceive.toFixed(2).replace(".", ",")} a receber` : "quitado"}
+                  {toReceive > 0 ? `R$ ${toReceive.toFixed(2).replace(".", ",")}` : "quitado"}
                 </span>
+                {toReceive > 0 && (
+                  <p className="mt-0.5 text-[10px] uppercase tracking-wide text-amber-600/70">
+                    a receber
+                  </p>
+                )}
                 <p className="mt-1 text-xs text-neutral-400">
                   {new Date(q.created_at).toLocaleDateString("pt-BR")}
                 </p>
