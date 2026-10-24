@@ -344,7 +344,12 @@ export function CatalogShell({
         )}
       </main>
 
-      <SiteFooter tenantName={tenant.name} instagram={tenant.instagram} dark={dark} />
+      <SiteFooter
+        tenantName={tenant.name}
+        instagram={tenant.instagram}
+        dark={dark}
+        extraBottomSpace={isAdminViewer}
+      />
 
       {isAdminViewer && (
         <Link

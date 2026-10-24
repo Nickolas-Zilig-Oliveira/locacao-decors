@@ -108,7 +108,7 @@ export default async function ItemPage({
         />
       </main>
 
-      <SiteFooter tenantName={tenant.name} instagram={tenant.instagram} />
+      <SiteFooter tenantName={tenant.name} instagram={tenant.instagram} extraBottomSpace={isAdminViewer} />
 
       <WhatsappButton href={wa} />
     </div>

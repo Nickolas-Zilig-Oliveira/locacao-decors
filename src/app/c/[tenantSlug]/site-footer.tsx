@@ -1,14 +1,29 @@
 import { instagramLink } from "@/lib/instagram";
 import { InstagramIcon } from "./icons";
 
-export function SiteFooter({ tenantName, instagram, dark = true }: { tenantName: string; instagram: string | null; dark?: boolean }) {
+export function SiteFooter({
+  tenantName,
+  instagram,
+  dark = true,
+  extraBottomSpace = false,
+}: {
+  tenantName: string;
+  instagram: string | null;
+  dark?: boolean;
+  /** Adds clearance so a floating button (e.g. the admin pill) doesn't cover the text. */
+  extraBottomSpace?: boolean;
+}) {
   const ig = instagramLink(instagram);
   const muted = dark ? "text-white/40" : "text-neutral-500";
   const link = dark ? "text-white/70 hover:text-white" : "text-neutral-600 hover:text-neutral-900";
   const border = dark ? "border-white/10" : "border-neutral-200";
 
   return (
-    <footer className={`border-t px-4 py-6 text-center transition-colors duration-500 ${border}`}>
+    <footer
+      className={`border-t px-4 pt-6 text-center transition-colors duration-500 ${border} ${
+        extraBottomSpace ? "pb-20" : "pb-6"
+      }`}
+    >
       {ig && (
         <a
           href={ig}
