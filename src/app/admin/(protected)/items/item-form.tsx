@@ -76,7 +76,12 @@ export function ItemForm({
 
   function handleComponentNameChange(index: number, name: string) {
     const match = existingComponents.find((c) => c.name.toLowerCase() === name.toLowerCase());
-    updateComponent(index, { name, photo_url: match?.photo_url ?? undefined });
+    updateComponent(index, {
+      name,
+      photo_url: match?.photo_url ?? undefined,
+      unit_price: match?.unit_price ?? undefined,
+      replacement_value: match?.replacement_value ?? undefined,
+    });
   }
 
   function removeComponent(index: number) {
@@ -210,8 +215,9 @@ export function ItemForm({
         </div>
         <p className="mb-3 text-xs text-neutral-500">
           Aparece na vitrine (&quot;Itens inclusos no Kit&quot;) e é detalhado no contrato quando este
-          kit for usado. O nome sugere itens já cadastrados em outros kits — use o mesmo nome para
-          reaproveitar a foto automaticamente.
+          kit for usado — com foto, valor e valor de reposição (caso quebre/perca). O nome sugere
+          itens já cadastrados em outros kits — use o mesmo nome para reaproveitar os dados
+          automaticamente.
         </p>
 
         {components.length === 0 && (
@@ -222,50 +228,91 @@ export function ItemForm({
 
         <div className="space-y-2">
           {components.map((c, i) => (
-            <div key={i} className="flex flex-wrap items-center gap-2 rounded-lg border border-neutral-100 p-2">
-              <label className="relative h-10 w-10 shrink-0 cursor-pointer overflow-hidden rounded-lg bg-neutral-100">
-                {c.photo_url ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={c.photo_url} alt="" className="h-full w-full object-cover" />
-                ) : (
-                  <span className="flex h-full w-full items-center justify-center text-[9px] text-neutral-400">
-                    {uploadingComponent === i ? "..." : "foto"}
-                  </span>
-                )}
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={(e) => handleComponentPhotoChange(i, e)}
-                />
-              </label>
-              <div className="min-w-[140px] flex-1">
-                <input
-                  value={c.name}
-                  onChange={(e) => handleComponentNameChange(i, e.target.value)}
-                  placeholder="Ex: Urso Frederico"
-                  list="kit-components-list"
-                  className="w-full rounded-lg border border-neutral-300 px-3 py-1.5 text-sm focus:border-neutral-900 focus:outline-none"
-                />
+            <div key={i} className="space-y-2 rounded-lg border border-neutral-100 p-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <label className="relative h-10 w-10 shrink-0 cursor-pointer overflow-hidden rounded-lg bg-neutral-100">
+                  {c.photo_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={c.photo_url} alt="" className="h-full w-full object-cover" />
+                  ) : (
+                    <span className="flex h-full w-full items-center justify-center text-[9px] text-neutral-400">
+                      {uploadingComponent === i ? "..." : "foto"}
+                    </span>
+                  )}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => handleComponentPhotoChange(i, e)}
+                  />
+                </label>
+                <div className="min-w-[140px] flex-1">
+                  <input
+                    value={c.name}
+                    onChange={(e) => handleComponentNameChange(i, e.target.value)}
+                    placeholder="Ex: Urso Frederico"
+                    list="kit-components-list"
+                    className="w-full rounded-lg border border-neutral-300 px-3 py-1.5 text-sm focus:border-neutral-900 focus:outline-none"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={() => removeComponent(i)}
+                  className="shrink-0 rounded-full border border-red-200 px-2.5 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50"
+                >
+                  Remover
+                </button>
               </div>
-              <div className="w-16">
-                <input
-                  type="number"
-                  inputMode="numeric"
-                  min={1}
-                  onKeyDown={blockNonNumericKeys}
-                  value={c.quantity}
-                  onChange={(e) => updateComponent(i, { quantity: Number(e.target.value) || 1 })}
-                  className="w-full rounded-lg border border-neutral-300 px-2 py-1.5 text-sm focus:border-neutral-900 focus:outline-none"
-                />
+              <div className="grid grid-cols-3 gap-2 pl-[48px]">
+                <div>
+                  <label className="mb-0.5 block text-[10px] font-medium text-neutral-400">Qtd.</label>
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    min={1}
+                    onKeyDown={blockNonNumericKeys}
+                    value={c.quantity}
+                    onChange={(e) => updateComponent(i, { quantity: Number(e.target.value) || 1 })}
+                    className="w-full rounded-lg border border-neutral-300 px-2 py-1.5 text-sm focus:border-neutral-900 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="mb-0.5 block text-[10px] font-medium text-neutral-400">Valor (R$)</label>
+                  <input
+                    type="number"
+                    inputMode="decimal"
+                    step="0.01"
+                    min={0}
+                    onKeyDown={blockNonNumericKeys}
+                    value={c.unit_price ?? ""}
+                    onChange={(e) =>
+                      updateComponent(i, {
+                        unit_price: e.target.value === "" ? undefined : Number(e.target.value),
+                      })
+                    }
+                    placeholder="0,00"
+                    className="w-full rounded-lg border border-neutral-300 px-2 py-1.5 text-sm focus:border-neutral-900 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="mb-0.5 block text-[10px] font-medium text-neutral-400">Reposição (R$)</label>
+                  <input
+                    type="number"
+                    inputMode="decimal"
+                    step="0.01"
+                    min={0}
+                    onKeyDown={blockNonNumericKeys}
+                    value={c.replacement_value ?? ""}
+                    onChange={(e) =>
+                      updateComponent(i, {
+                        replacement_value: e.target.value === "" ? undefined : Number(e.target.value),
+                      })
+                    }
+                    placeholder="0,00"
+                    className="w-full rounded-lg border border-neutral-300 px-2 py-1.5 text-sm focus:border-neutral-900 focus:outline-none"
+                  />
+                </div>
               </div>
-              <button
-                type="button"
-                onClick={() => removeComponent(i)}
-                className="shrink-0 rounded-full border border-red-200 px-2.5 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50"
-              >
-                Remover
-              </button>
             </div>
           ))}
         </div>

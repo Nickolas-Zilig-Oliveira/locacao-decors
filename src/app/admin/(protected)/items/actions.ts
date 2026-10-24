@@ -17,7 +17,7 @@ function slugify(text: string) {
 async function syncKitComponents(
   supabase: Awaited<ReturnType<typeof createClient>>,
   tenantId: string,
-  components: { name: string; photo_url?: string }[]
+  components: { name: string; photo_url?: string; unit_price?: number; replacement_value?: number }[]
 ) {
   for (const c of components) {
     const name = c.name.trim();
@@ -25,22 +25,29 @@ async function syncKitComponents(
 
     const { data: existing } = await supabase
       .from("item_kit_components")
-      .select("id, photo_url")
+      .select("id, photo_url, unit_price, replacement_value")
       .eq("tenant_id", tenantId)
       .ilike("name", name)
       .maybeSingle();
 
     if (existing) {
-      if (c.photo_url && c.photo_url !== existing.photo_url) {
-        await supabase
-          .from("item_kit_components")
-          .update({ photo_url: c.photo_url })
-          .eq("id", existing.id);
+      const patch: Record<string, unknown> = {};
+      if (c.photo_url && c.photo_url !== existing.photo_url) patch.photo_url = c.photo_url;
+      if (c.unit_price != null && c.unit_price !== existing.unit_price) patch.unit_price = c.unit_price;
+      if (c.replacement_value != null && c.replacement_value !== existing.replacement_value) {
+        patch.replacement_value = c.replacement_value;
+      }
+      if (Object.keys(patch).length > 0) {
+        await supabase.from("item_kit_components").update(patch).eq("id", existing.id);
       }
     } else {
-      await supabase
-        .from("item_kit_components")
-        .insert({ tenant_id: tenantId, name, photo_url: c.photo_url ?? null });
+      await supabase.from("item_kit_components").insert({
+        tenant_id: tenantId,
+        name,
+        photo_url: c.photo_url ?? null,
+        unit_price: c.unit_price ?? null,
+        replacement_value: c.replacement_value ?? null,
+      });
     }
   }
 }

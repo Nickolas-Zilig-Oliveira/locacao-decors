@@ -1,4 +1,4 @@
-import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
+import { Document, Image, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
 import type { Quote, Tenant } from "@/lib/types";
 import { DEFAULT_CONTRACT_CLAUSES, quoteTotals } from "@/lib/contract-terms";
 
@@ -30,8 +30,16 @@ const styles = StyleSheet.create({
   tdName: { flex: 1 },
   tdPrice: { width: 70, textAlign: "right" },
   tdTotal: { width: 70, textAlign: "right" },
-  componentRow: { flexDirection: "row", paddingLeft: 40, paddingVertical: 1 },
-  componentText: { fontSize: 8.5, color: "#666" },
+  componentRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingLeft: 40,
+    paddingVertical: 2,
+  },
+  componentImg: { width: 18, height: 18, marginRight: 5, objectFit: "cover" },
+  componentText: { fontSize: 8.5, color: "#666", flex: 1 },
+  componentPrice: { fontSize: 8.5, color: "#666", width: 65, textAlign: "right" },
+  componentReplacement: { fontSize: 8.5, color: "#999", width: 110, textAlign: "right" },
   totalsBox: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -136,9 +144,18 @@ export function ContractDocument({ tenant, quote }: { tenant: Tenant; quote: Quo
             </View>
             {item.components?.map((c, ci) => (
               <View key={ci} style={styles.componentRow}>
+                {c.photo_url && <Image style={styles.componentImg} src={c.photo_url} />}
                 <Text style={styles.componentText}>
                   • {c.quantity}x {c.name}
                 </Text>
+                {c.unit_price != null && (
+                  <Text style={styles.componentPrice}>{money(c.unit_price)}</Text>
+                )}
+                {c.replacement_value != null && (
+                  <Text style={styles.componentReplacement}>
+                    Reposição: {money(c.replacement_value)}
+                  </Text>
+                )}
               </View>
             ))}
           </View>

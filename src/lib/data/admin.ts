@@ -78,7 +78,7 @@ export async function getKitComponentsCatalog(
   const supabase = await createClient();
   const { data } = await supabase
     .from("item_kit_components")
-    .select("name, photo_url")
+    .select("name, photo_url, unit_price, replacement_value")
     .eq("tenant_id", tenantId)
     .order("name");
   return data ?? [];

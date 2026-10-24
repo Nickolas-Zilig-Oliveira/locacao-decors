@@ -56,11 +56,15 @@ export type ItemComponent = {
   name: string;
   quantity: number;
   photo_url?: string;
+  unit_price?: number;
+  replacement_value?: number;
 };
 
 export type KitComponentCatalogEntry = {
   name: string;
   photo_url: string | null;
+  unit_price: number | null;
+  replacement_value: number | null;
 };
 
 export type Item = {
