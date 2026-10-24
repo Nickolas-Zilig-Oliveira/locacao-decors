@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import type { Category, Item, Tenant } from "@/lib/types";
-import { WhatsappButton } from "./whatsapp-button";
 import {
   ChevronRightIcon,
   CloseIcon,
@@ -13,6 +12,7 @@ import {
   MoonIcon,
   SearchIcon,
   SunIcon,
+  WhatsAppIcon,
 } from "./icons";
 
 type Props = {
@@ -142,13 +142,22 @@ export function CatalogShell({
         className="sticky top-0 z-10 flex flex-wrap items-center gap-3 px-4 pb-3 shadow-lg transition-colors duration-500 sm:px-6 lg:px-8"
         style={{ backgroundColor: accent, paddingTop: "max(0.75rem, env(safe-area-inset-top))" }}
       >
-        <div className="flex items-center gap-3">
-          <div
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-sm font-bold"
-            style={{ color: accent }}
-          >
-            {tenant.name.charAt(0).toUpperCase()}
-          </div>
+        <div className="flex min-w-0 items-center gap-3">
+          {tenant.logo_url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={tenant.logo_url}
+              alt=""
+              className="h-9 w-9 shrink-0 rounded-lg object-cover"
+            />
+          ) : (
+            <div
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-sm font-bold"
+              style={{ color: accent }}
+            >
+              {tenant.name.charAt(0).toUpperCase()}
+            </div>
+          )}
           <h1 className="truncate text-base font-bold uppercase tracking-wide text-white sm:text-lg">
             {tenant.name}
           </h1>
@@ -162,6 +171,17 @@ export function CatalogShell({
             >
               ← Admin
             </Link>
+          )}
+          {waLink && (
+            <a
+              href={waLink}
+              target="_blank"
+              rel="noreferrer"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-black/20 text-white transition-colors hover:bg-black/30"
+              aria-label="Falar no WhatsApp"
+            >
+              <WhatsAppIcon className="h-4 w-4" />
+            </a>
           )}
           <button
             type="button"
@@ -342,8 +362,6 @@ export function CatalogShell({
           <p className={`py-12 text-center ${theme.muted}`}>Nenhum item encontrado.</p>
         )}
       </main>
-
-      <WhatsappButton href={waLink} />
 
       {categoryMenuOpen && (
         <div className="fixed inset-0 z-50 flex">
