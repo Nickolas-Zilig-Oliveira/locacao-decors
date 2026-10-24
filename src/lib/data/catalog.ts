@@ -1,15 +1,31 @@
 import { createClient } from "@/lib/supabase/server";
 import type { BlockedDate, Category, Item, Tenant } from "@/lib/types";
 
+// Only the columns the public storefront actually needs — anonymous
+// visitors no longer have SELECT on business-private columns like cnpj,
+// owner contact info or internal notes (see the tenants RLS/grants).
+const PUBLIC_TENANT_COLUMNS =
+  "id, slug, name, city, phone, logo_url, description, active, primary_color, instagram, pickup_notes, created_at";
+
 export async function getTenantBySlug(slug: string): Promise<Tenant | null> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("tenants")
-    .select("*")
+    .select(PUBLIC_TENANT_COLUMNS)
     .eq("slug", slug)
     .eq("active", true)
     .maybeSingle();
-  return data;
+  if (!data) return null;
+  return {
+    ...data,
+    cnpj: null,
+    email: null,
+    address: null,
+    owner_name: null,
+    owner_phone: null,
+    notes: null,
+    subscription_status: "active",
+  } as Tenant;
 }
 
 export async function getCategories(tenantId: string): Promise<Category[]> {
