@@ -23,6 +23,7 @@ type Props = {
   items: Item[];
   categoria?: string;
   q?: string;
+  tipo?: "kit" | "avulso";
   waLink: string | null;
   isAdminViewer?: boolean;
 };
@@ -35,6 +36,7 @@ export function CatalogShell({
   items,
   categoria,
   q,
+  tipo,
   waLink,
   isAdminViewer,
 }: Props) {
@@ -43,6 +45,15 @@ export function CatalogShell({
   const [categoryMenuOpen, setCategoryMenuOpen] = useState(false);
   const scrollerRef = useRef<HTMLDivElement>(null);
   const accent = tenant.primary_color;
+
+  function buildHref(overrides: { categoria?: string; q?: string; tipo?: string }) {
+    const params = new URLSearchParams();
+    if (overrides.categoria) params.set("categoria", overrides.categoria);
+    if (overrides.q) params.set("q", overrides.q);
+    if (overrides.tipo) params.set("tipo", overrides.tipo);
+    const qs = params.toString();
+    return `/c/${tenantSlug}${qs ? `?${qs}` : ""}`;
+  }
 
   useEffect(() => {
     const el = scrollerRef.current;
@@ -141,6 +152,7 @@ export function CatalogShell({
           )}
           <form action={`/c/${tenantSlug}`} className="relative hidden sm:block">
             {categoria && <input type="hidden" name="categoria" value={categoria} />}
+            {tipo && <input type="hidden" name="tipo" value={tipo} />}
             <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/70" />
             <input
               type="search"
@@ -162,6 +174,7 @@ export function CatalogShell({
 
         <form action={`/c/${tenantSlug}`} className="relative w-full sm:hidden">
           {categoria && <input type="hidden" name="categoria" value={categoria} />}
+          {tipo && <input type="hidden" name="tipo" value={tipo} />}
           <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/70" />
           <input
             type="search"
@@ -192,7 +205,7 @@ export function CatalogShell({
 
           <div ref={scrollerRef} className="flex flex-1 gap-2 overflow-x-auto scroll-smooth pb-1">
             <Link
-              href={`/c/${tenantSlug}${q ? `?q=${encodeURIComponent(q)}` : ""}`}
+              href={buildHref({ q, tipo })}
               className={`shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition-colors duration-500 ${
                 !categoria ? "" : theme.pill
               }`}
@@ -206,7 +219,7 @@ export function CatalogShell({
               return (
                 <Link
                   key={c.id}
-                  href={`/c/${tenantSlug}?categoria=${c.slug}${q ? `&q=${encodeURIComponent(q)}` : ""}`}
+                  href={buildHref({ categoria: c.slug, q, tipo })}
                   className={`flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium transition-colors duration-500 ${
                     active ? "" : theme.pill
                   }`}
@@ -229,6 +242,32 @@ export function CatalogShell({
               <ChevronRightIcon className="h-4 w-4" />
             </button>
           )}
+        </div>
+
+        <div className="mb-4 flex items-center gap-2">
+          {([
+            { label: "Tudo", value: undefined },
+            { label: "Kits", value: "kit" as const },
+            { label: "Itens avulsos", value: "avulso" as const },
+          ]).map((opt) => {
+            const active = tipo === opt.value;
+            return (
+              <Link
+                key={opt.label}
+                href={buildHref({ categoria, q, tipo: opt.value })}
+                className={`rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors duration-500 ${
+                  active
+                    ? "border-transparent"
+                    : dark
+                      ? "border-white/15 text-white/70 hover:border-white/30"
+                      : "border-neutral-300 text-neutral-600 hover:border-neutral-400"
+                }`}
+                style={active ? { backgroundColor: accent, color: "white" } : undefined}
+              >
+                {opt.label}
+              </Link>
+            );
+          })}
         </div>
 
         <div className="mb-4 flex items-center justify-between">
@@ -323,7 +362,7 @@ export function CatalogShell({
             </div>
             <div className="space-y-1 overflow-y-auto">
               <Link
-                href={`/c/${tenantSlug}${q ? `?q=${encodeURIComponent(q)}` : ""}`}
+                href={buildHref({ q, tipo })}
                 onClick={() => setCategoryMenuOpen(false)}
                 className={`flex items-center justify-between rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-500 ${
                   !categoria ? "" : theme.pill
@@ -341,7 +380,7 @@ export function CatalogShell({
                 return (
                   <Link
                     key={c.id}
-                    href={`/c/${tenantSlug}?categoria=${c.slug}${q ? `&q=${encodeURIComponent(q)}` : ""}`}
+                    href={buildHref({ categoria: c.slug, q, tipo })}
                     onClick={() => setCategoryMenuOpen(false)}
                     className={`flex items-center justify-between rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-500 ${
                       active ? "" : theme.pill

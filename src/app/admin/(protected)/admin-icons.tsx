@@ -69,6 +69,15 @@ export function LogoutIcon(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
+export function TagIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M12.6 2.6 21 11l-9.4 9.4a2 2 0 0 1-2.8 0L3 15.6a2 2 0 0 1 0-2.8l9.6-9.6a2 2 0 0 1 1.4-.6H21v9.4" />
+      <circle cx="16.5" cy="7.5" r="1.2" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
 export function StoreIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>

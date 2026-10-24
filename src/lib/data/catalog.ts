@@ -25,7 +25,8 @@ export async function getCategories(tenantId: string): Promise<Category[]> {
 export async function getItems(
   tenantId: string,
   categorySlug?: string,
-  search?: string
+  search?: string,
+  tipo?: "kit" | "avulso"
 ): Promise<Item[]> {
   const supabase = await createClient();
   let query = supabase
@@ -42,7 +43,11 @@ export async function getItems(
   }
 
   const { data } = await query.order("name");
-  return data ?? [];
+  const items = data ?? [];
+
+  if (tipo === "kit") return items.filter((i) => i.components?.length > 0);
+  if (tipo === "avulso") return items.filter((i) => !i.components?.length);
+  return items;
 }
 
 export async function getCategoryItemCounts(

@@ -2,11 +2,31 @@ import Link from "next/link";
 import { getAdminItems, getCurrentTenant } from "@/lib/data/admin";
 import { deleteItem } from "./actions";
 
-export default async function AdminItemsPage() {
+export default async function AdminItemsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ tipo?: string }>;
+}) {
+  const { tipo: rawTipo } = await searchParams;
+  const tipo = rawTipo === "kit" || rawTipo === "avulso" ? rawTipo : undefined;
+
   const tenant = await getCurrentTenant();
   if (!tenant) return null;
 
-  const items = await getAdminItems(tenant.id);
+  const allItems = await getAdminItems(tenant.id);
+  const kitCount = allItems.filter((i) => i.components.length > 0).length;
+  const avulsoCount = allItems.length - kitCount;
+  const items = allItems.filter((i) => {
+    if (tipo === "kit") return i.components.length > 0;
+    if (tipo === "avulso") return i.components.length === 0;
+    return true;
+  });
+
+  const tabs = [
+    { href: "/admin/items", label: "Todos", count: allItems.length, active: !tipo },
+    { href: "/admin/items?tipo=kit", label: "Kits", count: kitCount, active: tipo === "kit" },
+    { href: "/admin/items?tipo=avulso", label: "Itens avulsos", count: avulsoCount, active: tipo === "avulso" },
+  ];
 
   return (
     <div>
@@ -21,6 +41,29 @@ export default async function AdminItemsPage() {
         >
           + Novo item
         </Link>
+      </div>
+
+      <div className="mb-5 flex gap-2">
+        {tabs.map((tab) => (
+          <Link
+            key={tab.href}
+            href={tab.href}
+            className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+              tab.active
+                ? "bg-neutral-900 text-white"
+                : "border border-neutral-300 text-neutral-600 hover:bg-neutral-50"
+            }`}
+          >
+            {tab.label}
+            <span
+              className={`rounded-full px-1.5 py-0.5 text-xs ${
+                tab.active ? "bg-white/20" : "bg-neutral-100 text-neutral-500"
+              }`}
+            >
+              {tab.count}
+            </span>
+          </Link>
+        ))}
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -73,7 +116,13 @@ export default async function AdminItemsPage() {
 
       {items.length === 0 && (
         <div className="rounded-2xl border border-dashed border-neutral-300 bg-white px-4 py-12 text-center">
-          <p className="text-sm text-neutral-500">Nenhum item cadastrado ainda.</p>
+          <p className="text-sm text-neutral-500">
+            {tipo === "kit"
+              ? "Nenhum kit cadastrado ainda."
+              : tipo === "avulso"
+                ? "Nenhum item avulso cadastrado ainda."
+                : "Nenhum item cadastrado ainda."}
+          </p>
         </div>
       )}
     </div>

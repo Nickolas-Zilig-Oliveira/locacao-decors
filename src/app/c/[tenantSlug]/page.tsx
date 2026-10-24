@@ -9,17 +9,18 @@ export default async function TenantCatalogPage({
   searchParams,
 }: {
   params: Promise<{ tenantSlug: string }>;
-  searchParams: Promise<{ categoria?: string; q?: string }>;
+  searchParams: Promise<{ categoria?: string; q?: string; tipo?: string }>;
 }) {
   const { tenantSlug } = await params;
-  const { categoria, q } = await searchParams;
+  const { categoria, q, tipo: rawTipo } = await searchParams;
+  const tipo = rawTipo === "kit" || rawTipo === "avulso" ? rawTipo : undefined;
 
   const tenant = await getTenantBySlug(tenantSlug);
   if (!tenant) notFound();
 
   const [categories, items, categoryCounts, isAdminViewer] = await Promise.all([
     getCategories(tenant.id),
-    getItems(tenant.id, categoria, q),
+    getItems(tenant.id, categoria, q, tipo),
     getCategoryItemCounts(tenant.id),
     isCurrentUserTenantAdmin(tenant.id),
   ]);
@@ -35,6 +36,7 @@ export default async function TenantCatalogPage({
       items={items}
       categoria={categoria}
       q={q}
+      tipo={tipo}
       waLink={wa}
       isAdminViewer={isAdminViewer}
     />

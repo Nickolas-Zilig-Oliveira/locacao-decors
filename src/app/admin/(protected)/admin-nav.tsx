@@ -13,11 +13,13 @@ import {
   LogoutIcon,
   MenuIcon,
   StoreIcon,
+  TagIcon,
   WalletIcon,
 } from "./admin-icons";
 
 const navItems = [
   { href: "/admin/items", label: "Itens", icon: BoxIcon },
+  { href: "/admin/categories", label: "Categorias", icon: TagIcon },
   { href: "/admin/bookings", label: "Pedidos do site", icon: CalendarIcon },
   { href: "/admin/quotes", label: "Contratos", icon: FileIcon },
   { href: "/admin/caixa", label: "Caixa", icon: WalletIcon },
