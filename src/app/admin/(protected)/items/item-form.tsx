@@ -45,9 +45,9 @@ export function ItemForm({
     setIsSuggesting(true);
     setError(null);
     try {
-      const result = await suggestItemDetails(imageUrl);
+      const result = await suggestItemDetails(imageUrl, name);
       if (result.ok) {
-        setName(result.name);
+        if (!name.trim()) setName(result.name);
         setDescription(result.description);
       } else {
         setError(result.error);

@@ -13,7 +13,10 @@ export type SuggestItemDetailsResult =
  * project's environment variables (Vercel: Project Settings → Environment
  * Variables). Without it, this just returns a friendly error.
  */
-export async function suggestItemDetails(imageUrl: string): Promise<SuggestItemDetailsResult> {
+export async function suggestItemDetails(
+  imageUrl: string,
+  currentName?: string
+): Promise<SuggestItemDetailsResult> {
   const tenant = await getCurrentTenant();
   if (!tenant) return { ok: false, error: "Não autorizado." };
 
@@ -36,7 +39,14 @@ export async function suggestItemDetails(imageUrl: string): Promise<SuggestItemD
     const base64 = Buffer.from(imgBuf).toString("base64");
     const mimeType = imgRes.headers.get("content-type") || "image/jpeg";
 
-    const prompt = `Você é especialista em marketing para uma loja de locação de decoração de festas (kits de balões, painéis, enfeites etc). Olhe a foto do item e sugira, em português do Brasil:
+    const trimmedName = currentName?.trim();
+    const prompt = trimmedName
+      ? `Você é especialista em marketing para uma loja de locação de decoração de festas (kits de balões, painéis, enfeites etc). O item já se chama "${trimmedName}". Olhe a foto e, combinando com esse nome, escreva em português do Brasil:
+- "name": repita exatamente o nome "${trimmedName}" (não mude, só devolva igual)
+- "description": uma descrição de venda, 2 a 3 frases curtas (máximo 280 caracteres), que combine com o nome "${trimmedName}" e com o que aparece na foto, destacando tema/ocasião e o que está incluso, em tom convidativo
+
+Responda SOMENTE com um JSON válido no formato {"name": "...", "description": "..."}, sem markdown, sem texto antes ou depois.`
+      : `Você é especialista em marketing para uma loja de locação de decoração de festas (kits de balões, painéis, enfeites etc). Olhe a foto do item e sugira, em português do Brasil:
 - "name": um nome curto e atrativo pro item (máximo 40 caracteres, sem aspas, sem emoji)
 - "description": uma descrição de venda, 2 a 3 frases curtas (máximo 280 caracteres), destacando tema/ocasião e o que está incluso, em tom convidativo
 
