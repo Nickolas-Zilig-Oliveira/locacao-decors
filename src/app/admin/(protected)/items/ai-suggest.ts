@@ -43,7 +43,7 @@ export async function suggestItemDetails(imageUrl: string): Promise<SuggestItemD
 Responda SOMENTE com um JSON válido no formato {"name": "...", "description": "..."}, sem markdown, sem texto antes ou depois.`;
 
     const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -55,6 +55,7 @@ Responda SOMENTE com um JSON válido no formato {"name": "...", "description": "
           ],
           generationConfig: { responseMimeType: "application/json" },
         }),
+        signal: AbortSignal.timeout(25000),
       }
     );
 
