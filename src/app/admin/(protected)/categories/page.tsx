@@ -1,5 +1,5 @@
 import { getAdminCategories, getAdminItems, getCurrentTenant } from "@/lib/data/admin";
-import { deleteCategory } from "./actions";
+import { CategoryRow } from "./category-row";
 import { NewCategoryForm } from "./new-category-form";
 
 export default async function AdminCategoriesPage() {
@@ -29,23 +29,7 @@ export default async function AdminCategoriesPage() {
 
       <div className="space-y-2">
         {categories.map((c) => (
-          <div
-            key={c.id}
-            className="flex items-center justify-between rounded-xl border border-neutral-200 bg-white px-4 py-3 shadow-sm"
-          >
-            <div>
-              <p className="font-medium text-neutral-900">{c.name}</p>
-              <p className="text-xs text-neutral-400">
-                {counts[c.id] ?? 0} {counts[c.id] === 1 ? "item" : "itens"}
-              </p>
-            </div>
-            <form action={deleteCategory}>
-              <input type="hidden" name="id" value={c.id} />
-              <button className="rounded-full border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50">
-                Excluir
-              </button>
-            </form>
-          </div>
+          <CategoryRow key={c.id} category={c} count={counts[c.id] ?? 0} />
         ))}
       </div>
 

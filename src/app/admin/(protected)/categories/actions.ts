@@ -42,6 +42,30 @@ export async function createCategory(formData: FormData): Promise<{ error: strin
   revalidatePath("/admin/items");
 }
 
+export async function renameCategory(formData: FormData): Promise<{ error: string } | void> {
+  const tenant = await getCurrentTenant();
+  if (!tenant) redirect("/admin/login");
+
+  const id = String(formData.get("id") ?? "");
+  const name = String(formData.get("name") ?? "").trim();
+  if (!name) return { error: "Digite um nome para a categoria." };
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("categories")
+    .update({ name, slug: slugify(name) })
+    .eq("id", id)
+    .eq("tenant_id", tenant!.id);
+
+  if (error) {
+    return { error: "Não foi possível renomear. Talvez já exista uma categoria com esse nome." };
+  }
+
+  revalidatePath("/admin/categories");
+  revalidatePath("/admin/items");
+  revalidatePath("/c", "layout");
+}
+
 export async function deleteCategory(formData: FormData) {
   const tenant = await getCurrentTenant();
   if (!tenant) redirect("/admin/login");
