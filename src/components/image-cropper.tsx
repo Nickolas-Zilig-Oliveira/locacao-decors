@@ -2,23 +2,29 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const FRAME_SIZE = 320;
-const OUTPUT_SIZE = 900;
+const FRAME_WIDTH = 320;
+const OUTPUT_WIDTH = 1200;
 const MAX_ZOOM = 3;
 
 type Props = {
   file: File;
+  /** width / height of the crop frame — e.g. 16/9 for the main product photo, 1 for a square thumbnail. */
+  aspectRatio?: number;
   onCancel: () => void;
   onConfirm: (blob: Blob) => void;
 };
 
 /**
- * Lets the admin pan/zoom a photo inside a square frame before upload, so
- * they see — and control — exactly how it'll be cropped in the catalog
- * (which always shows product photos as a square), instead of whatever
- * CSS object-cover happens to pick.
+ * Lets the admin pan/zoom a photo inside a frame before upload, so they see
+ * — and control — exactly how it'll be cropped in the catalog, instead of
+ * whatever CSS object-cover happens to pick.
  */
-export function ImageCropper({ file, onCancel, onConfirm }: Props) {
+export function ImageCropper({ file, aspectRatio = 16 / 9, onCancel, onConfirm }: Props) {
+  const frameW = FRAME_WIDTH;
+  const frameH = Math.round(FRAME_WIDTH / aspectRatio);
+  const outputW = OUTPUT_WIDTH;
+  const outputH = Math.round(OUTPUT_WIDTH / aspectRatio);
+
   const [imgUrl, setImgUrl] = useState<string | null>(null);
   const [naturalSize, setNaturalSize] = useState<{ w: number; h: number } | null>(null);
   const [zoom, setZoom] = useState(1);
@@ -41,18 +47,14 @@ export function ImageCropper({ file, onCancel, onConfirm }: Props) {
     setOffset({ x: 0, y: 0 });
   }
 
-  if (!naturalSize) {
-    // still loading dimensions
-  }
-
-  const baseScale = naturalSize ? Math.max(FRAME_SIZE / naturalSize.w, FRAME_SIZE / naturalSize.h) : 1;
+  const baseScale = naturalSize ? Math.max(frameW / naturalSize.w, frameH / naturalSize.h) : 1;
   const totalScale = baseScale * zoom;
-  const displayW = naturalSize ? naturalSize.w * totalScale : FRAME_SIZE;
-  const displayH = naturalSize ? naturalSize.h * totalScale : FRAME_SIZE;
+  const displayW = naturalSize ? naturalSize.w * totalScale : frameW;
+  const displayH = naturalSize ? naturalSize.h * totalScale : frameH;
 
   function clamp(pos: { x: number; y: number }, w: number, h: number) {
-    const minX = FRAME_SIZE - w;
-    const minY = FRAME_SIZE - h;
+    const minX = frameW - w;
+    const minY = frameH - h;
     return {
       x: Math.min(0, Math.max(minX, pos.x)),
       y: Math.min(0, Math.max(minY, pos.y)),
@@ -90,16 +92,17 @@ export function ImageCropper({ file, onCancel, onConfirm }: Props) {
     setIsSaving(true);
     try {
       const canvas = document.createElement("canvas");
-      canvas.width = OUTPUT_SIZE;
-      canvas.height = OUTPUT_SIZE;
+      canvas.width = outputW;
+      canvas.height = outputH;
       const ctx = canvas.getContext("2d");
       if (!ctx) throw new Error("no canvas context");
 
       const sx = -offset.x / totalScale;
       const sy = -offset.y / totalScale;
-      const sSize = FRAME_SIZE / totalScale;
+      const sWidth = frameW / totalScale;
+      const sHeight = frameH / totalScale;
 
-      ctx.drawImage(img, sx, sy, sSize, sSize, 0, 0, OUTPUT_SIZE, OUTPUT_SIZE);
+      ctx.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, outputW, outputH);
 
       const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.92));
       if (!blob) throw new Error("failed to export");
@@ -119,7 +122,7 @@ export function ImageCropper({ file, onCancel, onConfirm }: Props) {
 
         <div
           className="relative mx-auto touch-none overflow-hidden rounded-xl bg-neutral-100"
-          style={{ width: FRAME_SIZE, height: FRAME_SIZE }}
+          style={{ width: frameW, height: frameH }}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}

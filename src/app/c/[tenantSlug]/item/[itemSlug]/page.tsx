@@ -44,7 +44,7 @@ export default async function ItemPage({
         </Link>
 
         <div className="mt-4 grid gap-6 sm:grid-cols-2">
-          <div className="aspect-square overflow-hidden rounded-xl bg-white/10">
+          <div className="aspect-video overflow-hidden rounded-xl bg-white/10">
             {item.images?.[0] ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={item.images[0]} alt={item.name} className="h-full w-full object-cover" />

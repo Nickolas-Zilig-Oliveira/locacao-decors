@@ -310,7 +310,7 @@ export function CatalogShell({
               href={`/c/${tenantSlug}/item/${item.slug}`}
               className={`group overflow-hidden rounded-xl border transition-colors duration-500 ${theme.card}`}
             >
-              <div className={`relative aspect-square overflow-hidden ${theme.cardImgBg}`}>
+              <div className={`relative aspect-video overflow-hidden ${theme.cardImgBg}`}>
                 {item.piece_count && (
                   <span
                     className={`absolute left-2 top-2 rounded-full px-2 py-0.5 text-xs font-medium ${theme.badge}`}
