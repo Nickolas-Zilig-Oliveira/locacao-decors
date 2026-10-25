@@ -54,77 +54,81 @@ body {
 
 /* Admin panel dark mode — blanket re-color of the neutral palette used
    throughout the admin pages, scoped to .admin-theme.dark so it never
-   touches the public storefront (which has its own separate toggle). */
+   touches the public storefront (which has its own separate toggle).
+   Uses the same translucent-white-over-tinted-background language as the
+   storefront's own dark mode (see catalog-shell.tsx) instead of flat grays,
+   so both look like the same product. */
 .admin-theme.dark {
   color-scheme: dark;
+  color: rgba(255, 255, 255, 0.92);
 }
 
 .admin-theme.dark .bg-white {
-  background-color: #18181b;
+  background-color: rgba(255, 255, 255, 0.06);
 }
 
 .admin-theme.dark .bg-neutral-50 {
-  background-color: #1f1f23;
+  background-color: rgba(255, 255, 255, 0.04);
 }
 
 .admin-theme.dark .bg-neutral-100 {
-  background-color: #27272a;
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
 .admin-theme.dark .bg-neutral-200 {
-  background-color: #3f3f46;
+  background-color: rgba(255, 255, 255, 0.14);
 }
 
 .admin-theme.dark .border-neutral-100 {
-  border-color: #27272a;
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
 .admin-theme.dark .border-neutral-200 {
-  border-color: #3f3f46;
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
 .admin-theme.dark .border-neutral-300 {
-  border-color: #52525b;
+  border-color: rgba(255, 255, 255, 0.18);
 }
 
 .admin-theme.dark .text-neutral-900 {
-  color: #f4f4f5;
+  color: rgba(255, 255, 255, 0.92);
 }
 
 .admin-theme.dark .text-neutral-800 {
-  color: #e4e4e7;
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .admin-theme.dark .text-neutral-700 {
-  color: #d4d4d8;
+  color: rgba(255, 255, 255, 0.75);
 }
 
 .admin-theme.dark .text-neutral-600,
 .admin-theme.dark .text-neutral-500 {
-  color: #a1a1aa;
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .admin-theme.dark .text-neutral-400,
 .admin-theme.dark .text-neutral-300 {
-  color: #71717a;
+  color: rgba(255, 255, 255, 0.4);
 }
 
 .admin-theme.dark .divide-neutral-100 > :not([hidden]) ~ :not([hidden]) {
-  border-color: #27272a;
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
 .admin-theme.dark .hover\:bg-neutral-50:hover {
-  background-color: #27272a;
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .admin-theme.dark .hover\:bg-neutral-100:hover {
-  background-color: #3f3f46;
+  background-color: rgba(255, 255, 255, 0.14);
 }
 
 .admin-theme.dark input,
 .admin-theme.dark select,
 .admin-theme.dark textarea {
-  background-color: #18181b;
-  color: #f4f4f5;
-  border-color: #3f3f46;
+  background-color: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.92);
+  border-color: rgba(255, 255, 255, 0.18);
 }

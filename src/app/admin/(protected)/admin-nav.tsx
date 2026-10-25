@@ -183,7 +183,7 @@ export function AdminSidebar({ tenant, tenantSlug, onLogout }: NavProps) {
   const { dark, toggle } = useAdminTheme();
 
   return (
-    <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-neutral-200 bg-white text-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100 lg:flex">
+    <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-neutral-200 bg-white text-neutral-900 lg:flex">
       <div
         className="flex items-center justify-between gap-2 px-4 py-3 text-white"
         style={{ backgroundColor: tenant.primary_color }}

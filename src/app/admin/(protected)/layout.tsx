@@ -34,7 +34,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   }
 
   return (
-    <AdminThemeProvider>
+    <AdminThemeProvider primaryColor={tenant.primary_color}>
       <AdminSidebar tenant={tenant} tenantSlug={tenant.slug} onLogout={logout} />
       <div className="min-w-0 flex-1">
         <AdminTopBar tenant={tenant} tenantSlug={tenant.slug} onLogout={logout} />
