@@ -5,7 +5,7 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center justify-center bg-neutral-950 px-4 py-12 text-white">
       <div className="mb-10 text-center">
         <p className="mb-2 text-xs font-semibold uppercase tracking-[0.3em] text-white/40">
-          Ziliglasis
+          Ziligz
         </p>
         <h1 className="text-2xl font-bold sm:text-3xl">Sistema de Locação de Decoração</h1>
         <p className="mx-auto mt-2 max-w-md text-sm text-white/60">
@@ -43,7 +43,7 @@ export default function Home() {
         </Link>
       </div>
 
-      <p className="mt-10 text-xs text-white/30">Plataforma operada por Ziliglasis</p>
+      <p className="mt-10 text-xs text-white/30">Plataforma operada por Ziligz</p>
     </main>
   );
 }

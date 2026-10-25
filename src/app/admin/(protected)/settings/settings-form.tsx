@@ -208,7 +208,7 @@ export function SettingsForm({ tenant }: { tenant: Tenant }) {
         <div>
           <p className="text-sm font-semibold text-neutral-900">Responsável pela loja</p>
           <p className="text-xs text-neutral-400">
-            Usado pela Ziliglasis para falar com você sobre a conta — não aparece na vitrine.
+            Usado pela Ziligz para falar com você sobre a conta — não aparece na vitrine.
           </p>
         </div>
         <div className="grid gap-4 sm:grid-cols-2">

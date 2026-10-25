@@ -13,13 +13,13 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   if (tenant.subscription_status !== "active") {
     const message =
       tenant.subscription_status === "pending"
-        ? "Seu acesso está pendente de ativação. Fale com a Ziliglasis para liberar o painel."
-        : "Seu acesso está suspenso. Fale com a Ziliglasis para reativar o painel.";
+        ? "Seu acesso está pendente de ativação. Fale com a Ziligz para liberar o painel."
+        : "Seu acesso está suspenso. Fale com a Ziligz para reativar o painel.";
 
     return (
       <div className="flex min-h-screen items-center justify-center bg-neutral-950 px-4 text-center text-white">
         <div className="max-w-sm">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/40">Ziliglasis</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/40">Ziligz</p>
           <h1 className="mt-2 text-lg font-bold">Painel indisponível</h1>
           <p className="mt-2 text-sm text-white/60">{message}</p>
           <form action={logout} className="mt-6">

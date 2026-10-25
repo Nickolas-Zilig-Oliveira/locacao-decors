@@ -55,7 +55,7 @@ export default async function SuperAdminPage() {
           const status = statusConfig[tenant.subscription_status];
           const wa = whatsappLink(
             tenant.owner_phone || tenant.phone,
-            `Olá${tenant.owner_name ? `, ${tenant.owner_name}` : ""}! Aqui é da Ziliglasis.`
+            `Olá${tenant.owner_name ? `, ${tenant.owner_name}` : ""}! Aqui é da Ziligz.`
           );
 
           return (

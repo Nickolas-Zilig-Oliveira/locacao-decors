@@ -19,7 +19,7 @@ export default function ForgotPasswordPage() {
     <main className="flex min-h-screen items-center justify-center bg-neutral-950 px-4 text-white">
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/40">Ziliglasis</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/40">Ziligz</p>
           <h1 className="mt-2 text-xl font-bold">Esqueci minha senha</h1>
           <p className="mt-1 text-sm text-white/50">
             Informe o e-mail da sua conta e enviaremos um link para redefinir a senha.

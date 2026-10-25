@@ -3,6 +3,11 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  /* Tell Safari this page is light by default, so it doesn't paint the
+     overscroll/rubber-band area (and form chrome) dark just because the
+     phone's system theme is dark. The storefront overrides this per-page
+     to match its own light/dark toggle (see IosBackgroundSync). */
+  color-scheme: light;
 }
 
 @theme inline {

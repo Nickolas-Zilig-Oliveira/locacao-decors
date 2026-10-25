@@ -111,7 +111,7 @@ export function AdminTopBar({ tenant, tenantSlug, onLogout }: NavProps) {
         >
           <div className="mb-6 flex items-center justify-between">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/40">
-              Ziliglasis
+              Ziligz
             </p>
             <button
               type="button"
@@ -191,7 +191,7 @@ export function AdminSidebar({ tenant, tenantSlug, onLogout }: NavProps) {
       </div>
 
       <p className="mt-4 px-1 text-center text-[10px] uppercase tracking-[0.2em] text-white/20">
-        Ziliglasis
+        Ziligz
       </p>
     </aside>
   );

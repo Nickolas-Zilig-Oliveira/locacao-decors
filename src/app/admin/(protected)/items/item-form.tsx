@@ -5,6 +5,7 @@ import type { Category, Item, ItemComponent, KitComponentCatalogEntry } from "@/
 import { createClient } from "@/lib/supabase/client";
 import { formatMoneyTyping, moneyToDisplay, parseMoneyTyping } from "@/lib/masks";
 import { validateImageFile } from "@/lib/upload";
+import { ImageCropper } from "@/components/image-cropper";
 import { saveItem } from "./actions";
 
 function blockNonNumericKeys(e: React.KeyboardEvent<HTMLInputElement>) {
@@ -27,6 +28,7 @@ export function ItemForm({
   const [components, setComponents] = useState<ItemComponent[]>(item?.components ?? []);
   const [uploadingComponent, setUploadingComponent] = useState<number | null>(null);
   const [suggestFor, setSuggestFor] = useState<number | null>(null);
+  const [pendingCrop, setPendingCrop] = useState<{ file: File; target: "main" | number } | null>(null);
 
   function componentSuggestions(query: string) {
     const q = query.trim().toLowerCase();
@@ -44,48 +46,63 @@ export function ItemForm({
     return data.publicUrl;
   }
 
-  async function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
+  function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
+    e.target.value = "";
     if (!file) return;
 
     const invalidReason = validateImageFile(file);
     if (invalidReason) {
       setError(invalidReason);
-      e.target.value = "";
       return;
     }
 
-    setIsUploading(true);
     setError(null);
-    try {
-      setImageUrl(await uploadToStorage(file));
-    } catch {
-      setError("Não foi possível enviar a foto. Tente novamente.");
-    } finally {
-      setIsUploading(false);
-    }
+    setPendingCrop({ file, target: "main" });
   }
 
-  async function handleComponentPhotoChange(index: number, e: React.ChangeEvent<HTMLInputElement>) {
+  function handleComponentPhotoChange(index: number, e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
+    e.target.value = "";
     if (!file) return;
 
     const invalidReason = validateImageFile(file);
     if (invalidReason) {
       setError(invalidReason);
-      e.target.value = "";
       return;
     }
 
-    setUploadingComponent(index);
     setError(null);
-    try {
-      const url = await uploadToStorage(file);
-      updateComponent(index, { photo_url: url });
-    } catch {
-      setError("Não foi possível enviar a foto do sub-item. Tente novamente.");
-    } finally {
-      setUploadingComponent(null);
+    setPendingCrop({ file, target: index });
+  }
+
+  async function handleCropConfirm(blob: Blob) {
+    if (!pendingCrop) return;
+    const { target } = pendingCrop;
+    const croppedFile = new File([blob], "foto.jpg", { type: "image/jpeg" });
+    setPendingCrop(null);
+
+    if (target === "main") {
+      setIsUploading(true);
+      setError(null);
+      try {
+        setImageUrl(await uploadToStorage(croppedFile));
+      } catch {
+        setError("Não foi possível enviar a foto. Tente novamente.");
+      } finally {
+        setIsUploading(false);
+      }
+    } else {
+      setUploadingComponent(target);
+      setError(null);
+      try {
+        const url = await uploadToStorage(croppedFile);
+        updateComponent(target, { photo_url: url });
+      } catch {
+        setError("Não foi possível enviar a foto do sub-item. Tente novamente.");
+      } finally {
+        setUploadingComponent(null);
+      }
     }
   }
 
@@ -370,6 +387,14 @@ export function ItemForm({
       >
         {isPending ? "Salvando..." : "Salvar item"}
       </button>
+
+      {pendingCrop && (
+        <ImageCropper
+          file={pendingCrop.file}
+          onCancel={() => setPendingCrop(null)}
+          onConfirm={handleCropConfirm}
+        />
+      )}
     </form>
   );
 }

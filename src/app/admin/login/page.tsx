@@ -20,7 +20,7 @@ export default function LoginPage() {
     <main className="flex min-h-screen items-center justify-center bg-neutral-950 px-4 text-white">
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/40">Ziliglasis</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/40">Ziligz</p>
           <h1 className="mt-2 text-xl font-bold">Painel do locador</h1>
           <p className="mt-1 text-sm text-white/50">Entre com sua conta para gerenciar sua loja</p>
         </div>
@@ -64,7 +64,7 @@ export default function LoginPage() {
         </form>
 
         <p className="mt-6 text-center text-xs text-white/30">
-          Plataforma de locação operada por Ziliglasis
+          Plataforma de locação operada por Ziligz
         </p>
       </div>
     </main>

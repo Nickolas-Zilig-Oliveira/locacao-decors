@@ -52,7 +52,7 @@ export function SuperAdminTopBar({ onLogout }: NavProps) {
             Z
           </div>
           <div>
-            <p className="text-sm font-bold leading-tight">Ziliglasis</p>
+            <p className="text-sm font-bold leading-tight">Ziligz</p>
             <p className="text-[10px] leading-tight text-white/50">Super admin</p>
           </div>
         </div>
@@ -71,7 +71,7 @@ export function SuperAdminTopBar({ onLogout }: NavProps) {
           <div className="absolute inset-0 bg-black/60" onClick={() => setOpen(false)} />
           <div className="relative flex w-72 flex-col bg-neutral-900 p-4 text-white">
             <div className="mb-6 flex items-center justify-between">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/40">Ziliglasis</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/40">Ziligz</p>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
@@ -107,7 +107,7 @@ export function SuperAdminSidebar({ onLogout }: NavProps) {
           <BoxIcon className="h-4 w-4" />
         </div>
         <div className="min-w-0">
-          <p className="truncate text-sm font-bold">Ziliglasis</p>
+          <p className="truncate text-sm font-bold">Ziligz</p>
           <p className="text-xs text-white/40">Super admin</p>
         </div>
       </div>

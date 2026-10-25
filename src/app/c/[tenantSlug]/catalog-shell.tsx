@@ -90,13 +90,16 @@ export function CatalogShell({
   useEffect(() => {
     const prevHtmlBg = document.documentElement.style.backgroundColor;
     const prevBodyBg = document.body.style.backgroundColor;
+    const prevColorScheme = document.documentElement.style.colorScheme;
     document.documentElement.style.backgroundColor = pageBg;
     document.body.style.backgroundColor = pageBg;
+    document.documentElement.style.colorScheme = dark ? "dark" : "light";
     return () => {
       document.documentElement.style.backgroundColor = prevHtmlBg;
       document.body.style.backgroundColor = prevBodyBg;
+      document.documentElement.style.colorScheme = prevColorScheme;
     };
-  }, [pageBg]);
+  }, [pageBg, dark]);
 
   const theme = dark
     ? {

@@ -71,7 +71,7 @@ export default function ResetPasswordPage() {
     <main className="flex min-h-screen items-center justify-center bg-neutral-950 px-4 text-white">
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/40">Ziliglasis</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/40">Ziligz</p>
           <h1 className="mt-2 text-xl font-bold">Nova senha</h1>
           <p className="mt-1 text-sm text-white/50">Defina a nova senha da sua conta.</p>
         </div>
