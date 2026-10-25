@@ -20,7 +20,7 @@ type Props = {
  * — and control — exactly how it'll be cropped in the catalog, instead of
  * whatever CSS object-cover happens to pick.
  */
-export function ImageCropper({ file, aspectRatio = 9 / 16, onCancel, onConfirm }: Props) {
+export function ImageCropper({ file, aspectRatio = 3 / 4, onCancel, onConfirm }: Props) {
   // Fit the frame inside a max box, whichever side binds first, so tall
   // (portrait, phone-camera) crops don't blow past the modal's height.
   const fitsByWidth = aspectRatio >= MAX_FRAME_WIDTH / MAX_FRAME_HEIGHT;
