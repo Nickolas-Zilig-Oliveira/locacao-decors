@@ -13,10 +13,13 @@ import {
   HomeIcon,
   LogoutIcon,
   MenuIcon,
+  MoonIcon,
   StoreIcon,
+  SunIcon,
   TagIcon,
   WalletIcon,
 } from "./admin-icons";
+import { useAdminTheme } from "./admin-theme";
 
 const navItems = [
   { href: "/admin", label: "Início", icon: HomeIcon },
@@ -63,11 +66,12 @@ type NavProps = {
 /** Fixed mobile header + slide-in drawer. Rendered only below the lg breakpoint. */
 export function AdminTopBar({ tenant, tenantSlug, onLogout }: NavProps) {
   const [open, setOpen] = useState(false);
+  const { dark, toggle } = useAdminTheme();
 
   return (
     <>
       <div
-        className="sticky top-0 z-30 flex w-full items-center justify-between gap-3 px-4 pb-3 text-white shadow-md lg:hidden"
+        className="sticky top-0 z-30 flex w-full items-center justify-between gap-2 px-4 py-3 text-white shadow-md lg:hidden"
         style={{
           backgroundColor: tenant.primary_color,
           paddingTop: "max(0.75rem, env(safe-area-inset-top))",
@@ -85,16 +89,26 @@ export function AdminTopBar({ tenant, tenantSlug, onLogout }: NavProps) {
               {tenant.name.charAt(0).toUpperCase()}
             </div>
           )}
-          <p className="truncate text-sm font-bold uppercase tracking-wide">{tenant.name}</p>
+          <p className="truncate text-sm font-bold">{tenant.name}</p>
         </div>
-        <button
-          type="button"
-          onClick={() => setOpen(true)}
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-black/20 active:bg-black/30"
-          aria-label="Abrir menu"
-        >
-          <MenuIcon className="h-5 w-5" />
-        </button>
+        <div className="flex shrink-0 items-center gap-2">
+          <button
+            type="button"
+            onClick={toggle}
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-black/20 active:bg-black/30"
+            aria-label={dark ? "Mudar para modo claro" : "Mudar para modo escuro"}
+          >
+            {dark ? <SunIcon className="h-4 w-4" /> : <MoonIcon className="h-4 w-4" />}
+          </button>
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-black/20 active:bg-black/30"
+            aria-label="Abrir menu"
+          >
+            <MenuIcon className="h-5 w-5" />
+          </button>
+        </div>
       </div>
 
       <div
@@ -166,27 +180,36 @@ export function AdminTopBar({ tenant, tenantSlug, onLogout }: NavProps) {
 
 /** Fixed-width sidebar column. Rendered only at the lg breakpoint and above. */
 export function AdminSidebar({ tenant, tenantSlug, onLogout }: NavProps) {
+  const { dark, toggle } = useAdminTheme();
+
   return (
-    <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-neutral-200 bg-white text-neutral-900 lg:flex">
+    <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-neutral-200 bg-white text-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100 lg:flex">
       <div
-        className="flex items-center gap-2 p-4 text-white"
+        className="flex items-center justify-between gap-2 px-4 py-3 text-white"
         style={{ backgroundColor: tenant.primary_color }}
       >
-        {tenant.logo_url ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={tenant.logo_url} alt="" className="h-9 w-9 shrink-0 rounded-lg object-cover" />
-        ) : (
-          <div
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-sm font-bold"
-            style={{ color: tenant.primary_color }}
-          >
-            {tenant.name.charAt(0).toUpperCase()}
-          </div>
-        )}
-        <div className="min-w-0">
+        <div className="flex min-w-0 items-center gap-2">
+          {tenant.logo_url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={tenant.logo_url} alt="" className="h-8 w-8 shrink-0 rounded-lg object-cover" />
+          ) : (
+            <div
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-xs font-bold"
+              style={{ color: tenant.primary_color }}
+            >
+              {tenant.name.charAt(0).toUpperCase()}
+            </div>
+          )}
           <p className="truncate text-sm font-bold">{tenant.name}</p>
-          <p className="text-xs text-white/70">Painel administrativo</p>
         </div>
+        <button
+          type="button"
+          onClick={toggle}
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-black/20 hover:bg-black/30"
+          aria-label={dark ? "Mudar para modo claro" : "Mudar para modo escuro"}
+        >
+          {dark ? <SunIcon className="h-4 w-4" /> : <MoonIcon className="h-4 w-4" />}
+        </button>
       </div>
 
       <div className="flex flex-1 flex-col p-4">

@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getCurrentTenant } from "@/lib/data/admin";
 import { logout } from "../login/actions";
 import { AdminSidebar, AdminTopBar } from "./admin-nav";
+import { AdminThemeProvider } from "./admin-theme";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const tenant = await getCurrentTenant();
@@ -33,7 +34,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   }
 
   return (
-    <div className="min-h-screen bg-neutral-100 lg:flex">
+    <AdminThemeProvider>
       <AdminSidebar tenant={tenant} tenantSlug={tenant.slug} onLogout={logout} />
       <div className="min-w-0 flex-1">
         <AdminTopBar tenant={tenant} tenantSlug={tenant.slug} onLogout={logout} />
@@ -41,6 +42,6 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <div className="mx-auto max-w-5xl">{children}</div>
         </main>
       </div>
-    </div>
+    </AdminThemeProvider>
   );
 }
