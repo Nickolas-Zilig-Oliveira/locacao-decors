@@ -2,13 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const FRAME_WIDTH = 320;
-const OUTPUT_WIDTH = 1200;
+const MAX_FRAME_WIDTH = 300;
+const MAX_FRAME_HEIGHT = 420;
+const OUTPUT_LONG_SIDE = 1400;
 const MAX_ZOOM = 3;
 
 type Props = {
   file: File;
-  /** width / height of the crop frame — e.g. 16/9 for the main product photo, 1 for a square thumbnail. */
+  /** width / height of the crop frame — e.g. 9/16 for a phone-camera product photo, 1 for a square thumbnail. */
   aspectRatio?: number;
   onCancel: () => void;
   onConfirm: (blob: Blob) => void;
@@ -19,11 +20,14 @@ type Props = {
  * — and control — exactly how it'll be cropped in the catalog, instead of
  * whatever CSS object-cover happens to pick.
  */
-export function ImageCropper({ file, aspectRatio = 16 / 9, onCancel, onConfirm }: Props) {
-  const frameW = FRAME_WIDTH;
-  const frameH = Math.round(FRAME_WIDTH / aspectRatio);
-  const outputW = OUTPUT_WIDTH;
-  const outputH = Math.round(OUTPUT_WIDTH / aspectRatio);
+export function ImageCropper({ file, aspectRatio = 9 / 16, onCancel, onConfirm }: Props) {
+  // Fit the frame inside a max box, whichever side binds first, so tall
+  // (portrait, phone-camera) crops don't blow past the modal's height.
+  const fitsByWidth = aspectRatio >= MAX_FRAME_WIDTH / MAX_FRAME_HEIGHT;
+  const frameW = fitsByWidth ? MAX_FRAME_WIDTH : Math.round(MAX_FRAME_HEIGHT * aspectRatio);
+  const frameH = fitsByWidth ? Math.round(MAX_FRAME_WIDTH / aspectRatio) : MAX_FRAME_HEIGHT;
+  const outputW = aspectRatio >= 1 ? OUTPUT_LONG_SIDE : Math.round(OUTPUT_LONG_SIDE * aspectRatio);
+  const outputH = aspectRatio >= 1 ? Math.round(OUTPUT_LONG_SIDE / aspectRatio) : OUTPUT_LONG_SIDE;
 
   const [imgUrl, setImgUrl] = useState<string | null>(null);
   const [naturalSize, setNaturalSize] = useState<{ w: number; h: number } | null>(null);
@@ -114,7 +118,7 @@ export function ImageCropper({ file, aspectRatio = 16 / 9, onCancel, onConfirm }
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 p-4">
-      <div className="w-full max-w-sm rounded-2xl bg-white p-4 shadow-xl">
+      <div className="max-h-[92vh] w-full max-w-sm overflow-y-auto rounded-2xl bg-white p-4 shadow-xl">
         <p className="mb-1 text-sm font-semibold text-neutral-900">Ajustar foto</p>
         <p className="mb-3 text-xs text-neutral-500">
           Arraste pra posicionar e use o controle pra dar zoom. É assim que vai aparecer pros clientes.

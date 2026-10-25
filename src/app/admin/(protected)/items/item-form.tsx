@@ -146,7 +146,7 @@ export function ItemForm({
         {/* Photo */}
         <section className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm">
           <p className="mb-3 text-sm font-semibold text-neutral-900">Foto do item</p>
-          <div className="mb-3 aspect-video w-full overflow-hidden rounded-xl bg-neutral-100">
+          <div className="mb-3 aspect-[9/16] w-full overflow-hidden rounded-xl bg-neutral-100">
             {imageUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={imageUrl} alt="" className="h-full w-full object-cover" />
@@ -391,7 +391,7 @@ export function ItemForm({
       {pendingCrop && (
         <ImageCropper
           file={pendingCrop.file}
-          aspectRatio={pendingCrop.target === "main" ? 16 / 9 : 1}
+          aspectRatio={pendingCrop.target === "main" ? 9 / 16 : 1}
           onCancel={() => setPendingCrop(null)}
           onConfirm={handleCropConfirm}
         />
