@@ -67,6 +67,13 @@ body {
   background-color: rgba(255, 255, 255, 0.06);
 }
 
+/* Solid elevated panels (sidebar, mobile drawer) — same flat dark used by
+   the storefront's own category drawer, so they read as a surface instead
+   of blending into the tinted page background. */
+.admin-theme.dark .admin-surface.bg-white {
+  background-color: #141417;
+}
+
 .admin-theme.dark .bg-neutral-50 {
   background-color: rgba(255, 255, 255, 0.04);
 }

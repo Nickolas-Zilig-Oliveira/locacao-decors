@@ -118,7 +118,7 @@ export function AdminTopBar({ tenant, tenantSlug, onLogout }: NavProps) {
       >
         <div className="absolute inset-0 bg-black/60" onClick={() => setOpen(false)} />
         <div
-          className={`relative flex w-72 flex-col bg-white text-neutral-900 transition-transform duration-300 ease-out ${
+          className={`admin-surface relative flex w-72 flex-col bg-white text-neutral-900 transition-transform duration-300 ease-out ${
             open ? "translate-x-0" : "-translate-x-full"
           }`}
         >
@@ -183,7 +183,7 @@ export function AdminSidebar({ tenant, tenantSlug, onLogout }: NavProps) {
   const { dark, toggle } = useAdminTheme();
 
   return (
-    <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-neutral-200 bg-white text-neutral-900 lg:flex">
+    <aside className="admin-surface sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-neutral-200 bg-white text-neutral-900 lg:flex">
       <div
         className="flex items-center justify-between gap-2 px-4 py-3 text-white"
         style={{ backgroundColor: tenant.primary_color }}
