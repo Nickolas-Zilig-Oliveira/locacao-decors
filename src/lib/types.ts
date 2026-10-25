@@ -80,6 +80,7 @@ export type Item = {
   images: string[];
   components: ItemComponent[];
   active: boolean;
+  is_kit: boolean;
 };
 
 export type Booking = {

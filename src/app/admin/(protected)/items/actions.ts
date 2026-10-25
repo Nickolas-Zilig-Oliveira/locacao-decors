@@ -66,6 +66,7 @@ export async function saveItem(formData: FormData): Promise<{ error: string } | 
   const description = String(formData.get("description") ?? "").trim() || null;
   const categoryId = String(formData.get("category_id") ?? "") || null;
   const imageUrl = String(formData.get("image_url") ?? "").trim();
+  const isKit = String(formData.get("is_kit") ?? "true") === "true";
   const componentsRaw = String(formData.get("components_json") ?? "[]");
   let components: { name: string; quantity: number; photo_url?: string }[] = [];
   try {
@@ -91,6 +92,7 @@ export async function saveItem(formData: FormData): Promise<{ error: string } | 
     category_id: categoryId,
     images: imageUrl ? [imageUrl] : [],
     components,
+    is_kit: isKit,
   };
 
   const { error } = id

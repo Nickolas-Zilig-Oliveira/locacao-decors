@@ -27,6 +27,7 @@ export function ItemForm({
   const [imageUrl, setImageUrl] = useState<string>(item?.images?.[0] ?? "");
   const [isUploading, setIsUploading] = useState(false);
   const [name, setName] = useState(item?.name ?? "");
+  const [isKit, setIsKit] = useState(item?.is_kit ?? true);
   const [description, setDescription] = useState(item?.description ?? "");
   const [isSuggesting, setIsSuggesting] = useState(false);
   const [components, setComponents] = useState<ItemComponent[]>(item?.components ?? []);
@@ -195,6 +196,38 @@ export function ItemForm({
         {/* Basic info */}
         <section className="space-y-4 rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
           <p className="text-sm font-semibold text-neutral-900">Informações do item</p>
+
+          <div>
+            <label className="mb-1 block text-xs font-medium text-neutral-500">Tipo de item</label>
+            <input type="hidden" name="is_kit" value={isKit ? "true" : "false"} />
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => setIsKit(true)}
+                className={`flex-1 rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${
+                  isKit
+                    ? "border-neutral-900 bg-neutral-900 text-white"
+                    : "border-neutral-300 text-neutral-600 hover:bg-neutral-50"
+                }`}
+              >
+                Kit
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsKit(false)}
+                className={`flex-1 rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${
+                  !isKit
+                    ? "border-neutral-900 bg-neutral-900 text-white"
+                    : "border-neutral-300 text-neutral-600 hover:bg-neutral-50"
+                }`}
+              >
+                Item avulso
+              </button>
+            </div>
+            <p className="mt-1 text-[11px] text-neutral-400">
+              Kit = vários itens juntos (ex: painel + mesa + acessórios). Item avulso = uma peça só.
+            </p>
+          </div>
 
           <div>
             <label className="mb-1 block text-xs font-medium text-neutral-500">Nome</label>

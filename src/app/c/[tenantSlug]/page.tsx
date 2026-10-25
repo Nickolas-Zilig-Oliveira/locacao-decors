@@ -27,11 +27,15 @@ export default async function TenantCatalogPage({
 
   const wa = whatsappLink(tenant.phone, `Olá! Vi a loja ${tenant.name} e quero saber mais.`);
 
+  const sortedCategories = [...categories].sort(
+    (a, b) => (categoryCounts.byCategory[b.id] ?? 0) - (categoryCounts.byCategory[a.id] ?? 0)
+  );
+
   return (
     <CatalogShell
       tenant={tenant}
       tenantSlug={tenantSlug}
-      categories={categories}
+      categories={sortedCategories}
       categoryCounts={categoryCounts}
       items={items}
       categoria={categoria}

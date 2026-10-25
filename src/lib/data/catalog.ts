@@ -61,8 +61,8 @@ export async function getItems(
   const { data } = await query.order("name");
   const items = data ?? [];
 
-  if (tipo === "kit") return items.filter((i) => i.components?.length > 0);
-  if (tipo === "avulso") return items.filter((i) => !i.components?.length);
+  if (tipo === "kit") return items.filter((i) => i.is_kit);
+  if (tipo === "avulso") return items.filter((i) => !i.is_kit);
   return items;
 }
 

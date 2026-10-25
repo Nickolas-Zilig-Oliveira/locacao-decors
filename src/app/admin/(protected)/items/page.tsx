@@ -14,11 +14,11 @@ export default async function AdminItemsPage({
   if (!tenant) return null;
 
   const allItems = await getAdminItems(tenant.id);
-  const kitCount = allItems.filter((i) => i.components.length > 0).length;
+  const kitCount = allItems.filter((i) => i.is_kit).length;
   const avulsoCount = allItems.length - kitCount;
   const items = allItems.filter((i) => {
-    if (tipo === "kit") return i.components.length > 0;
-    if (tipo === "avulso") return i.components.length === 0;
+    if (tipo === "kit") return i.is_kit;
+    if (tipo === "avulso") return !i.is_kit;
     return true;
   });
 
@@ -80,7 +80,7 @@ export default async function AdminItemsPage({
             </div>
             <div className="p-4">
               <p className="truncate font-semibold text-neutral-900">{item.name}</p>
-              <div className="mt-0.5 flex items-center gap-2">
+              <div className="mt-0.5 flex flex-wrap items-center gap-2">
                 <p className="text-sm text-neutral-600">R$ {item.price.toFixed(2).replace(".", ",")}</p>
                 <span
                   className={`rounded-full px-2 py-0.5 text-xs font-medium ${
@@ -88,6 +88,13 @@ export default async function AdminItemsPage({
                   }`}
                 >
                   {item.active ? "ativo" : "inativo"}
+                </span>
+                <span
+                  className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                    item.is_kit ? "bg-pink-50 text-pink-700" : "bg-blue-50 text-blue-700"
+                  }`}
+                >
+                  {item.is_kit ? "kit" : "avulso"}
                 </span>
               </div>
               {item.components.length > 0 && (
