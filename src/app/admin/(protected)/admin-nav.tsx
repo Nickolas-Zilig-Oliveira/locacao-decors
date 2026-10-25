@@ -104,13 +104,16 @@ export function AdminTopBar({ tenant, tenantSlug, onLogout }: NavProps) {
       >
         <div className="absolute inset-0 bg-black/60" onClick={() => setOpen(false)} />
         <div
-          className={`relative flex w-72 flex-col bg-white p-4 text-neutral-900 transition-transform duration-300 ease-out ${
+          className={`relative flex w-72 flex-col bg-white text-neutral-900 transition-transform duration-300 ease-out ${
             open ? "translate-x-0" : "-translate-x-full"
           }`}
         >
           <div
-            className="mb-4 flex items-center justify-between gap-2 rounded-xl p-3 text-white"
-            style={{ backgroundColor: tenant.primary_color }}
+            className="flex items-center justify-between gap-2 p-4 text-white"
+            style={{
+              backgroundColor: tenant.primary_color,
+              paddingTop: "max(1rem, env(safe-area-inset-top))",
+            }}
           >
             <div className="flex min-w-0 items-center gap-2">
               {tenant.logo_url ? (
@@ -135,23 +138,25 @@ export function AdminTopBar({ tenant, tenantSlug, onLogout }: NavProps) {
               <CloseIcon className="h-4 w-4" />
             </button>
           </div>
-          <NavLinks primaryColor={tenant.primary_color} onNavigate={() => setOpen(false)} />
-          <div className="mt-auto space-y-1 border-t border-neutral-100 pt-4">
-            <Link
-              href={`/c/${tenantSlug}`}
-              target="_blank"
-              className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900"
-            >
-              <StoreIcon className="h-4 w-4" />
-              Ver minha loja
-            </Link>
-            <button
-              onClick={onLogout}
-              className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900"
-            >
-              <LogoutIcon className="h-4 w-4" />
-              Sair
-            </button>
+          <div className="flex flex-1 flex-col p-4">
+            <NavLinks primaryColor={tenant.primary_color} onNavigate={() => setOpen(false)} />
+            <div className="mt-auto space-y-1 border-t border-neutral-100 pt-4">
+              <Link
+                href={`/c/${tenantSlug}`}
+                target="_blank"
+                className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900"
+              >
+                <StoreIcon className="h-4 w-4" />
+                Ver minha loja
+              </Link>
+              <button
+                onClick={onLogout}
+                className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900"
+              >
+                <LogoutIcon className="h-4 w-4" />
+                Sair
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -162,9 +167,9 @@ export function AdminTopBar({ tenant, tenantSlug, onLogout }: NavProps) {
 /** Fixed-width sidebar column. Rendered only at the lg breakpoint and above. */
 export function AdminSidebar({ tenant, tenantSlug, onLogout }: NavProps) {
   return (
-    <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-neutral-200 bg-white p-4 text-neutral-900 lg:flex">
+    <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-neutral-200 bg-white text-neutral-900 lg:flex">
       <div
-        className="mb-4 flex items-center gap-2 rounded-xl p-3 text-white"
+        className="flex items-center gap-2 p-4 text-white"
         style={{ backgroundColor: tenant.primary_color }}
       >
         {tenant.logo_url ? (
@@ -184,29 +189,31 @@ export function AdminSidebar({ tenant, tenantSlug, onLogout }: NavProps) {
         </div>
       </div>
 
-      <NavLinks primaryColor={tenant.primary_color} />
+      <div className="flex flex-1 flex-col p-4">
+        <NavLinks primaryColor={tenant.primary_color} />
 
-      <div className="mt-auto space-y-1 border-t border-neutral-100 pt-4">
-        <Link
-          href={`/c/${tenantSlug}`}
-          target="_blank"
-          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900"
-        >
-          <StoreIcon className="h-4 w-4" />
-          Ver minha loja
-        </Link>
-        <button
-          onClick={onLogout}
-          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900"
-        >
-          <LogoutIcon className="h-4 w-4" />
-          Sair
-        </button>
+        <div className="mt-auto space-y-1 border-t border-neutral-100 pt-4">
+          <Link
+            href={`/c/${tenantSlug}`}
+            target="_blank"
+            className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900"
+          >
+            <StoreIcon className="h-4 w-4" />
+            Ver minha loja
+          </Link>
+          <button
+            onClick={onLogout}
+            className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900"
+          >
+            <LogoutIcon className="h-4 w-4" />
+            Sair
+          </button>
+        </div>
+
+        <p className="mt-4 px-1 text-center text-[10px] uppercase tracking-[0.2em] text-neutral-300">
+          Ziligz
+        </p>
       </div>
-
-      <p className="mt-4 px-1 text-center text-[10px] uppercase tracking-[0.2em] text-neutral-300">
-        Ziligz
-      </p>
     </aside>
   );
 }
