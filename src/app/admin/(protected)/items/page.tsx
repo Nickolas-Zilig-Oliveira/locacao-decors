@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getAdminItems, getCurrentTenant } from "@/lib/data/admin";
+import { getAdminCategories, getAdminItems, getCurrentTenant } from "@/lib/data/admin";
 import { deleteItem } from "./actions";
 
 export default async function AdminItemsPage({
@@ -13,7 +13,11 @@ export default async function AdminItemsPage({
   const tenant = await getCurrentTenant();
   if (!tenant) return null;
 
-  const allItems = await getAdminItems(tenant.id);
+  const [allItems, categories] = await Promise.all([
+    getAdminItems(tenant.id),
+    getAdminCategories(tenant.id),
+  ]);
+  const categoryNames = new Map(categories.map((c) => [c.id, c.name]));
   const kitCount = allItems.filter((i) => i.is_kit).length;
   const avulsoCount = allItems.length - kitCount;
   const items = allItems.filter((i) => {
@@ -80,7 +84,14 @@ export default async function AdminItemsPage({
             </div>
             <div className="p-4">
               <p className="truncate font-semibold text-neutral-900">{item.name}</p>
-              <div className="mt-0.5 flex flex-wrap items-center gap-2">
+              <p
+                className={`mt-0.5 text-xs font-medium ${
+                  item.category_id ? "text-neutral-500" : "text-amber-600"
+                }`}
+              >
+                {item.category_id ? categoryNames.get(item.category_id) ?? "Categoria removida" : "Sem categoria"}
+              </p>
+              <div className="mt-1 flex flex-wrap items-center gap-2">
                 <p className="text-sm text-neutral-600">R$ {item.price.toFixed(2).replace(".", ",")}</p>
                 <span
                   className={`rounded-full px-2 py-0.5 text-xs font-medium ${
