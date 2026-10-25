@@ -7,6 +7,7 @@ import { formatMoneyTyping, moneyToDisplay, parseMoneyTyping } from "@/lib/masks
 import { validateImageFile } from "@/lib/upload";
 import { ImageCropper } from "@/components/image-cropper";
 import { saveItem } from "./actions";
+import { suggestItemDetails } from "./ai-suggest";
 
 function blockNonNumericKeys(e: React.KeyboardEvent<HTMLInputElement>) {
   if (["e", "E", "+", "-"].includes(e.key)) e.preventDefault();
@@ -25,6 +26,9 @@ export function ItemForm({
   const [isPending, startTransition] = useTransition();
   const [imageUrl, setImageUrl] = useState<string>(item?.images?.[0] ?? "");
   const [isUploading, setIsUploading] = useState(false);
+  const [name, setName] = useState(item?.name ?? "");
+  const [description, setDescription] = useState(item?.description ?? "");
+  const [isSuggesting, setIsSuggesting] = useState(false);
   const [components, setComponents] = useState<ItemComponent[]>(item?.components ?? []);
   const [uploadingComponent, setUploadingComponent] = useState<number | null>(null);
   const [suggestFor, setSuggestFor] = useState<number | null>(null);
@@ -34,6 +38,23 @@ export function ItemForm({
     const q = query.trim().toLowerCase();
     if (!q) return [];
     return existingComponents.filter((c) => c.name.toLowerCase().includes(q)).slice(0, 6);
+  }
+
+  async function handleSuggestWithAi() {
+    if (!imageUrl) return;
+    setIsSuggesting(true);
+    setError(null);
+    try {
+      const result = await suggestItemDetails(imageUrl);
+      if (result.ok) {
+        setName(result.name);
+        setDescription(result.description);
+      } else {
+        setError(result.error);
+      }
+    } finally {
+      setIsSuggesting(false);
+    }
   }
 
   async function uploadToStorage(file: File) {
@@ -160,6 +181,15 @@ export function ItemForm({
             {isUploading ? "Enviando..." : "Trocar foto"}
             <input type="file" accept="image/*" onChange={handlePhotoChange} className="hidden" />
           </label>
+
+          <button
+            type="button"
+            onClick={handleSuggestWithAi}
+            disabled={!imageUrl || isSuggesting}
+            className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg border border-neutral-300 px-3 py-2 text-center text-xs font-medium text-neutral-600 hover:border-neutral-400 hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            ✨ {isSuggesting ? "Gerando..." : "Sugerir nome e descrição com IA"}
+          </button>
         </section>
 
         {/* Basic info */}
@@ -170,7 +200,8 @@ export function ItemForm({
             <label className="mb-1 block text-xs font-medium text-neutral-500">Nome</label>
             <input
               name="name"
-              defaultValue={item?.name}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               placeholder="Ex: Painel Redondo Baby"
               required
               className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
@@ -228,7 +259,8 @@ export function ItemForm({
             <textarea
               name="description"
               rows={3}
-              defaultValue={item?.description ?? ""}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
               placeholder="Detalhes que aparecem na página do item na vitrine"
               className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
             />
