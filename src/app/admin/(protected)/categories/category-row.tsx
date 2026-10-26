@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import type { Category } from "@/lib/types";
+import { ConfirmSubmit } from "../confirm-submit";
 import { deleteCategory, renameCategory } from "./actions";
 
 export function CategoryRow({ category, count }: { category: Category; count: number }) {
@@ -30,7 +31,7 @@ export function CategoryRow({ category, count }: { category: Category; count: nu
 
   if (isEditing) {
     return (
-      <div className="rounded-xl border border-neutral-200 bg-white px-4 py-3 shadow-sm">
+      <div className="px-4 py-3 sm:px-5">
         <form action={handleRename} className="flex items-center gap-2">
           <input type="hidden" name="id" value={category.id} />
           <input
@@ -39,12 +40,12 @@ export function CategoryRow({ category, count }: { category: Category; count: nu
             onChange={(e) => setName(e.target.value)}
             autoFocus
             required
-            className="flex-1 rounded-lg border border-neutral-300 px-3 py-1.5 text-sm focus:border-neutral-900 focus:outline-none"
+            className="flex-1 rounded-lg border border-neutral-300 px-3 py-1.5 text-sm focus:border-[var(--accent-strong)] focus:outline-none focus:ring-4 focus:ring-[var(--accent)]/15"
           />
           <button
             type="submit"
             disabled={isPending}
-            className="shrink-0 rounded-full bg-neutral-900 px-3 py-1.5 text-xs font-medium text-white hover:bg-neutral-800 disabled:opacity-50"
+            className="shrink-0 rounded-full bg-[var(--accent-strong)] px-3 py-1.5 text-xs font-medium text-white hover:brightness-110 disabled:opacity-50"
           >
             {isPending ? "Salvando..." : "Salvar"}
           </button>
@@ -62,26 +63,29 @@ export function CategoryRow({ category, count }: { category: Category; count: nu
   }
 
   return (
-    <div className="flex items-center justify-between rounded-xl border border-neutral-200 bg-white px-4 py-3 shadow-sm">
-      <div>
-        <p className="font-medium text-neutral-900">{category.name}</p>
-        <p className="text-xs text-neutral-400">
+    <div className="flex items-center justify-between gap-3 px-4 py-3.5 sm:px-5">
+      <div className="min-w-0">
+        <p className="truncate text-[15px] font-semibold text-neutral-900">{category.name}</p>
+        <p className="text-xs tabular-nums text-neutral-500">
           {count} {count === 1 ? "item" : "itens"}
         </p>
       </div>
-      <div className="flex shrink-0 items-center gap-2">
+      <div className="flex shrink-0 items-center gap-1.5">
         <button
           type="button"
           onClick={() => setIsEditing(true)}
-          className="rounded-full border border-neutral-300 px-3 py-1.5 text-xs font-medium hover:bg-neutral-50"
+          className="h-8 rounded-full px-3 text-xs font-semibold text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-900"
         >
           Renomear
         </button>
         <form action={deleteCategory}>
           <input type="hidden" name="id" value={category.id} />
-          <button className="rounded-full border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50">
+          <ConfirmSubmit
+            message={`Excluir a categoria "${category.name}"?`}
+            className="h-8 rounded-full px-3 text-xs font-semibold text-red-600 transition-colors hover:bg-red-50"
+          >
             Excluir
-          </button>
+          </ConfirmSubmit>
         </form>
       </div>
     </div>

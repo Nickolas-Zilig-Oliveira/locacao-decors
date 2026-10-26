@@ -1,18 +1,26 @@
-import Link from "next/link";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getBlockedDates, getItemBySlug, getTenantBySlug } from "@/lib/data/catalog";
 import { isCurrentUserTenantAdmin } from "@/lib/data/admin";
 import { whatsappLink } from "@/lib/whatsapp";
-import { WhatsappButton } from "../../whatsapp-button";
-import { IosBackgroundSync } from "../../ios-background-sync";
-import { SiteFooter } from "../../site-footer";
-import { BookingForm } from "./booking-form";
+import { ItemShell } from "./item-shell";
 
-export default async function ItemPage({
-  params,
-}: {
-  params: Promise<{ tenantSlug: string; itemSlug: string }>;
-}) {
+type Params = Promise<{ tenantSlug: string; itemSlug: string }>;
+
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+  const { tenantSlug, itemSlug } = await params;
+  const tenant = await getTenantBySlug(tenantSlug);
+  if (!tenant) return {};
+  const item = await getItemBySlug(tenant.id, itemSlug);
+  if (!item) return { title: tenant.name };
+  return {
+    title: `${item.name} · ${tenant.name}`,
+    description: item.description ?? undefined,
+    openGraph: item.images?.[0] ? { images: [item.images[0]] } : undefined,
+  };
+}
+
+export default async function ItemPage({ params }: { params: Params }) {
   const { tenantSlug, itemSlug } = await params;
 
   const tenant = await getTenantBySlug(tenantSlug);
@@ -21,98 +29,19 @@ export default async function ItemPage({
   const item = await getItemBySlug(tenant.id, itemSlug);
   if (!item) notFound();
 
-  const blockedDates = await getBlockedDates(item.id);
-  const accent = tenant.primary_color;
-  const wa = whatsappLink(tenant.phone, `Olá! Tenho interesse em "${item.name}".`);
-  const isAdminViewer = await isCurrentUserTenantAdmin(tenant.id);
-
-  const pageBg = `color-mix(in srgb, ${accent} 16%, #0b0b0d)`;
+  const [blockedDates, isAdminViewer] = await Promise.all([
+    getBlockedDates(item.id),
+    isCurrentUserTenantAdmin(tenant.id),
+  ]);
 
   return (
-    <div className="flex min-h-screen flex-col text-white" style={{ backgroundColor: pageBg }}>
-      <IosBackgroundSync color={pageBg} />
-      <header
-        className="sticky top-0 z-10 flex items-center gap-3 px-4 pb-3 shadow-lg sm:px-6 lg:px-8"
-        style={{ backgroundColor: accent, paddingTop: "max(0.75rem, env(safe-area-inset-top))" }}
-      >
-        <h1 className="truncate text-lg font-bold uppercase tracking-wide">{tenant.name}</h1>
-      </header>
-
-      <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-8 pb-28 sm:px-6 lg:px-8">
-        <Link href={`/c/${tenantSlug}`} className="text-sm text-white/60 hover:underline">
-          ← Voltar
-        </Link>
-
-        <div className="mt-4 grid gap-6 sm:grid-cols-2">
-          <div className="aspect-[3/4] overflow-hidden rounded-xl bg-white/10">
-            {item.images?.[0] ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={item.images[0]} alt={item.name} className="h-full w-full object-cover" />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center text-sm text-white/30">
-                sem foto
-              </div>
-            )}
-          </div>
-          <div>
-            <h2 className="text-xl font-semibold">{item.name}</h2>
-            <p className="mt-1 text-lg font-bold" style={{ color: accent }}>
-              R$ {item.price.toFixed(2).replace(".", ",")}
-            </p>
-            {item.piece_count && (
-              <p className="text-sm text-white/50">{item.piece_count} peças no kit</p>
-            )}
-            {item.description && <p className="mt-3 whitespace-pre-line text-white/70">{item.description}</p>}
-          </div>
-        </div>
-
-        {item.components.length > 0 && (
-          <div className="mt-8">
-            <h3 className="mb-3 font-semibold">Itens inclusos no Kit</h3>
-            <div className="space-y-2">
-              {item.components.map((c, i) => (
-                <div
-                  key={i}
-                  className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3"
-                >
-                  <div className="h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-white/10">
-                    {c.photo_url && (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={c.photo_url} alt="" className="h-full w-full object-cover" />
-                    )}
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">{c.name}</p>
-                    <p className="text-xs text-white/50">Quantidade: {c.quantity}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        <BookingForm
-          tenantId={tenant.id}
-          itemId={item.id}
-          itemName={item.name}
-          tenantPhone={tenant.phone}
-          blockedDates={blockedDates.map((b) => b.date)}
-          accent={accent}
-        />
-      </main>
-
-      <SiteFooter tenantName={tenant.name} instagram={tenant.instagram} />
-
-      {isAdminViewer && (
-        <Link
-          href="/admin"
-          className="fixed bottom-5 left-5 z-20 flex h-10 items-center gap-1.5 rounded-full bg-neutral-900/90 px-4 text-sm font-semibold text-white shadow-lg backdrop-blur hover:bg-neutral-900"
-        >
-          ← Admin
-        </Link>
-      )}
-
-      <WhatsappButton href={wa} />
-    </div>
+    <ItemShell
+      tenant={tenant}
+      tenantSlug={tenantSlug}
+      item={item}
+      blockedDates={blockedDates.map((b) => b.date)}
+      waLink={whatsappLink(tenant.phone, `Olá! Tenho interesse em "${item.name}".`)}
+      isAdminViewer={isAdminViewer}
+    />
   );
 }

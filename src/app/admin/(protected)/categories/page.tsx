@@ -19,23 +19,26 @@ export default async function AdminCategoriesPage() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-xl font-bold text-neutral-900">Categorias</h1>
-        <p className="text-sm text-neutral-500">Organize os itens da sua vitrine por categoria.</p>
+        <h1 className="text-2xl font-bold text-neutral-900 sm:text-[28px]">Categorias</h1>
+        <p className="mt-1 text-sm text-neutral-500">
+          Na vitrine, as categorias com mais itens aparecem primeiro.
+        </p>
       </div>
 
-      <div className="mb-6 rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
+      <div className="mb-4">
         <NewCategoryForm />
       </div>
 
-      <div className="space-y-2">
-        {categories.map((c) => (
-          <CategoryRow key={c.id} category={c} count={counts[c.id] ?? 0} />
-        ))}
-      </div>
-
-      {categories.length === 0 && (
-        <div className="rounded-2xl border border-dashed border-neutral-300 bg-white px-4 py-12 text-center">
-          <p className="text-sm text-neutral-500">Nenhuma categoria cadastrada ainda.</p>
+      {categories.length > 0 ? (
+        <div className="divide-y divide-neutral-100 overflow-hidden rounded-2xl border border-neutral-200 bg-white">
+          {categories.map((c) => (
+            <CategoryRow key={c.id} category={c} count={counts[c.id] ?? 0} />
+          ))}
+        </div>
+      ) : (
+        <div className="rounded-2xl border border-dashed border-neutral-300 bg-white px-6 py-12 text-center">
+          <p className="text-sm font-semibold text-neutral-900">Nenhuma categoria ainda</p>
+          <p className="mt-1 text-sm text-neutral-500">Crie categorias como “Infantil” ou “Casamento” para organizar a vitrine.</p>
         </div>
       )}
     </div>

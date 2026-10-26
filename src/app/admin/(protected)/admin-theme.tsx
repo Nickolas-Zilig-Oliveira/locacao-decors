@@ -37,7 +37,7 @@ export function AdminThemeProvider({
 
   // Same tinted-near-black formula used on the public storefront's dark mode,
   // so the admin panel's dark theme matches it instead of a generic gray.
-  const pageBg = dark ? `color-mix(in srgb, ${primaryColor} 16%, #0b0b0d)` : "#f5f5f5";
+  const pageBg = dark ? `color-mix(in srgb, ${primaryColor} 16%, #0b0b0d)` : "#f7f5f6";
 
   // Keep the iOS overscroll/bounce area the same color as the page (and the
   // real color-scheme in sync with the toggle) instead of following the
@@ -60,7 +60,11 @@ export function AdminThemeProvider({
     <ThemeContext.Provider value={{ dark, toggle: () => setDark((v) => !v) }}>
       <div
         className={`admin-theme min-h-screen transition-colors duration-300 lg:flex ${dark ? "dark" : ""}`}
-        style={{ backgroundColor: pageBg }}
+        style={{
+          backgroundColor: pageBg,
+          ["--accent" as string]: primaryColor,
+          ["--accent-strong" as string]: `color-mix(in srgb, ${primaryColor} 78%, black)`,
+        }}
       >
         {children}
       </div>

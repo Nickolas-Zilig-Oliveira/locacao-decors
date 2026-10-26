@@ -18,7 +18,7 @@ export function PaymentForm({ quoteId, toReceive }: { quoteId: string; toReceive
         required
         className="w-20 rounded-lg border border-neutral-300 px-2 py-1 text-xs"
       />
-      <button className="rounded-full bg-neutral-900 px-3 py-1 text-xs font-medium text-white hover:bg-neutral-800">
+      <button className="rounded-full bg-[var(--accent-strong)] px-3 py-1 text-xs font-medium text-white hover:brightness-110">
         Registrar
       </button>
     </form>

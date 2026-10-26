@@ -3,6 +3,8 @@
 import { useMemo, useState, useTransition } from "react";
 import { formatPhone } from "@/lib/masks";
 import { whatsappLink } from "@/lib/whatsapp";
+import { ChevronLeftIcon, ChevronRightIcon, WhatsAppIcon } from "../../icons";
+import { storeTheme } from "../../store-theme";
 import { createBooking } from "./actions";
 
 type Props = {
@@ -12,24 +14,31 @@ type Props = {
   tenantPhone: string | null;
   blockedDates: string[];
   accent: string;
+  dark: boolean;
 };
 
 function toDateKey(d: Date) {
-  return d.toISOString().slice(0, 10);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
 }
 
 function formatDateLabel(key: string) {
   const [y, m, d] = key.split("-").map(Number);
-  return new Date(y, m - 1, d).toLocaleDateString("pt-BR", {
+  const label = new Date(y, m - 1, d).toLocaleDateString("pt-BR", {
+    weekday: "long",
     day: "2-digit",
     month: "long",
-    year: "numeric",
   });
+  return label.charAt(0).toUpperCase() + label.slice(1);
 }
 
 const MAX_MONTHS_AHEAD = 11;
+const WEEKDAYS = ["D", "S", "T", "Q", "Q", "S", "S"];
 
-export function BookingForm({ tenantId, itemId, itemName, tenantPhone, blockedDates, accent }: Props) {
+export function BookingForm({ tenantId, itemId, itemName, tenantPhone, blockedDates, accent, dark }: Props) {
+  const theme = storeTheme(dark);
   const [open, setOpen] = useState(false);
   const blocked = useMemo(() => new Set(blockedDates), [blockedDates]);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
@@ -51,12 +60,9 @@ export function BookingForm({ tenantId, itemId, itemName, tenantPhone, blockedDa
   function buildDays(start: Date) {
     const year = start.getFullYear();
     const month = start.getMonth();
-    const firstWeekday = start.getDay();
+    const days: (Date | null)[] = Array(start.getDay()).fill(null);
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const days: (Date | null)[] = Array(firstWeekday).fill(null);
-    for (let day = 1; day <= daysInMonth; day++) {
-      days.push(new Date(year, month, day));
-    }
+    for (let day = 1; day <= daysInMonth; day++) days.push(new Date(year, month, day));
     return days;
   }
 
@@ -64,16 +70,14 @@ export function BookingForm({ tenantId, itemId, itemName, tenantPhone, blockedDa
     selectedDate && tenantPhone
       ? whatsappLink(
           tenantPhone,
-          `Olá! Acabei de solicitar a reserva de "${itemName}" para o dia ${formatDateLabel(
-            selectedDate
-          )}. Meu nome é ${name}.`
+          `Olá! Acabei de solicitar a reserva de "${itemName}" para ${formatDateLabel(selectedDate).toLowerCase()}. Meu nome é ${name}.`
         )
       : null;
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!selectedDate) {
-      setMessage({ type: "error", text: "Selecione uma data disponível." });
+      setMessage({ type: "error", text: "Escolha uma data disponível no calendário." });
       return;
     }
     startTransition(async () => {
@@ -85,23 +89,23 @@ export function BookingForm({ tenantId, itemId, itemName, tenantPhone, blockedDa
         customerPhone: phone,
         notes,
       });
-      if (result.ok) {
-        setMessage({ type: "ok", text: "Reserva enviada! Confirme no WhatsApp pra garantir sua data." });
-      } else {
-        setMessage({ type: "error", text: result.error });
-      }
+      setMessage(result.ok ? { type: "ok", text: "" } : { type: "error", text: result.error });
     });
   }
+
+  const label = `mb-1.5 block text-[13px] font-semibold ${theme.softText}`;
+  const field = `w-full rounded-xl border-0 px-3.5 py-2.5 text-[15px] outline-none transition-shadow ${theme.field}`;
+  const navBtn = `flex h-9 w-9 items-center justify-center rounded-full transition-colors duration-200 disabled:pointer-events-none disabled:opacity-25 ${theme.iconBtn}`;
 
   if (!open) {
     return (
       <div className="mt-8">
         <button
           onClick={() => setOpen(true)}
-          className="w-full rounded-full py-3 text-sm font-semibold text-white shadow-lg sm:w-auto sm:px-8"
+          className="h-12 w-full rounded-full px-8 text-[15px] font-semibold text-white shadow-[0_12px_28px_-12px_var(--accent)] transition-transform duration-200 active:scale-[0.98] sm:w-auto"
           style={{ backgroundColor: accent }}
         >
-          Verificar disponibilidade
+          Ver datas disponíveis
         </button>
       </div>
     );
@@ -109,19 +113,29 @@ export function BookingForm({ tenantId, itemId, itemName, tenantPhone, blockedDa
 
   if (message?.type === "ok") {
     return (
-      <div className="mt-8 rounded-xl border border-white/10 bg-white/5 p-5 text-center">
-        <p className="text-lg font-semibold text-green-400">Reserva enviada!</p>
-        <p className="mt-1 text-sm text-white/60">
-          Pedido registrado para <span className="font-medium text-white">{formatDateLabel(selectedDate!)}</span>.
-          Pra garantir e combinar pagamento e retirada, confirme agora no WhatsApp.
+      <div className={`mt-8 rounded-3xl p-6 text-center ${theme.card}`}>
+        <div
+          className="mx-auto flex h-12 w-12 items-center justify-center rounded-full text-white"
+          style={{ backgroundColor: accent }}
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6">
+            <path d="M20 6 9 17l-5-5" />
+          </svg>
+        </div>
+        <p className="mt-4 font-display text-xl font-bold">Pedido enviado</p>
+        <p className={`mx-auto mt-2 max-w-sm text-sm leading-relaxed ${theme.muted}`}>
+          Registramos seu pedido para{" "}
+          <span className={`font-semibold ${theme.text}`}>{formatDateLabel(selectedDate!).toLowerCase()}</span>. Confirme no
+          WhatsApp para garantir a data e combinar pagamento e retirada.
         </p>
         {waConfirmLink && (
           <a
             href={waConfirmLink}
             target="_blank"
             rel="noreferrer"
-            className="mt-4 inline-flex items-center justify-center gap-2 rounded-full bg-green-500 px-6 py-3 text-sm font-semibold text-white hover:bg-green-600"
+            className="mt-5 inline-flex h-12 items-center justify-center gap-2 rounded-full bg-[#25D366] px-6 text-[15px] font-semibold text-white transition-transform duration-200 active:scale-[0.98]"
           >
+            <WhatsAppIcon className="h-5 w-5" />
             Confirmar no WhatsApp
           </a>
         )}
@@ -130,39 +144,37 @@ export function BookingForm({ tenantId, itemId, itemName, tenantPhone, blockedDa
   }
 
   return (
-    <div className="mt-8 rounded-xl border border-white/10 bg-white/5 p-5">
-      <h2 className="mb-1 font-semibold">Verificar disponibilidade</h2>
-      <p className="mb-4 text-sm text-white/50">
-        Escolha a data desejada e informe seus dados para solicitar a reserva.
-      </p>
+    <section className={`mt-8 rounded-3xl p-5 sm:p-6 ${theme.card}`}>
+      <h2 className="font-display text-xl font-bold">Escolha a data</h2>
+      <p className={`mt-1 text-sm ${theme.muted}`}>Datas riscadas já estão reservadas.</p>
 
-      <div className="mb-3 flex items-center justify-between">
+      <div className="mb-3 mt-5 flex items-center justify-between">
         <button
           type="button"
           onClick={() => setMonthOffset((v) => Math.max(0, v - 1))}
           disabled={monthOffset === 0}
-          className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white disabled:opacity-20"
+          className={navBtn}
           aria-label="Mês anterior"
         >
-          ‹
+          <ChevronLeftIcon className="h-4 w-4" />
         </button>
-        <p className="text-sm font-semibold capitalize text-white">
+        <p className="font-display text-base font-bold capitalize">
           {monthStart.toLocaleDateString("pt-BR", { month: "long", year: "numeric" })}
         </p>
         <button
           type="button"
           onClick={() => setMonthOffset((v) => Math.min(MAX_MONTHS_AHEAD, v + 1))}
           disabled={monthOffset === MAX_MONTHS_AHEAD}
-          className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white disabled:opacity-20"
+          className={navBtn}
           aria-label="Próximo mês"
         >
-          ›
+          <ChevronRightIcon className="h-4 w-4" />
         </button>
       </div>
 
-      <div className="grid grid-cols-7 gap-1.5 text-center text-xs">
-        {["D", "S", "T", "Q", "Q", "S", "S"].map((d, i) => (
-          <span key={i} className="pb-1 text-white/30">
+      <div className="grid grid-cols-7 gap-1 text-center">
+        {WEEKDAYS.map((d, i) => (
+          <span key={i} className={`pb-1.5 text-[11px] font-semibold ${theme.muted}`}>
             {d}
           </span>
         ))}
@@ -170,7 +182,7 @@ export function BookingForm({ tenantId, itemId, itemName, tenantPhone, blockedDa
           if (!day) return <span key={i} />;
           const key = toDateKey(day);
           const isPast = day < today;
-          const isToday = toDateKey(day) === toDateKey(today);
+          const isToday = key === toDateKey(today);
           const isBlocked = blocked.has(key);
           const isSelected = selectedDate === key;
           const disabled = isPast || isBlocked;
@@ -179,88 +191,106 @@ export function BookingForm({ tenantId, itemId, itemName, tenantPhone, blockedDa
               key={i}
               type="button"
               disabled={disabled}
-              onClick={() => setSelectedDate(key)}
-              className={`relative aspect-square rounded-lg text-sm font-medium transition-colors ${
+              onClick={() => {
+                setSelectedDate(key);
+                setMessage(null);
+              }}
+              aria-pressed={isSelected}
+              aria-label={`${day.getDate()}${isBlocked ? ", reservado" : ""}`}
+              className={`relative aspect-square rounded-xl text-sm font-semibold tabular-nums transition-colors duration-150 ${
                 disabled
-                  ? "cursor-not-allowed text-white/15 line-through"
+                  ? `cursor-not-allowed ${dark ? "text-white/20" : "text-neutral-300"} ${isBlocked ? "line-through" : ""}`
                   : isSelected
                     ? "text-white"
-                    : "text-white hover:bg-white/10"
-              } ${isToday && !isSelected ? "ring-1 ring-inset ring-white/30" : ""}`}
+                    : dark
+                      ? "hover:bg-white/[0.08]"
+                      : "hover:bg-neutral-900/[0.05]"
+              }`}
               style={isSelected ? { backgroundColor: accent } : undefined}
             >
               {day.getDate()}
+              {isToday && !isSelected && (
+                <span
+                  className="absolute bottom-1.5 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full"
+                  style={{ backgroundColor: accent }}
+                />
+              )}
             </button>
           );
         })}
       </div>
 
-      <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-white/40">
-        <span className="flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: accent }} />
-          Selecionado
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full ring-1 ring-inset ring-white/30" />
-          Hoje
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
-          Indisponível
-        </span>
-      </div>
-
-      <form onSubmit={handleSubmit} className="mt-6 space-y-3">
-        <div>
-          <label className="mb-1 block text-sm font-medium text-white/80">Data selecionada</label>
-          <input
-            readOnly
-            value={selectedDate ? formatDateLabel(selectedDate) : ""}
-            placeholder="Toque numa data disponível acima"
-            className="w-full rounded border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder-white/30"
-          />
+      <form onSubmit={handleSubmit} className={`mt-6 space-y-4 border-t pt-6 ${theme.divider}`}>
+        <div
+          className={`rounded-xl px-3.5 py-3 text-sm ${selectedDate ? "" : theme.muted} ${theme.cardImgBg}`}
+          aria-live="polite"
+        >
+          {selectedDate ? (
+            <>
+              Data escolhida: <span className="font-semibold">{formatDateLabel(selectedDate)}</span>
+            </>
+          ) : (
+            "Toque em uma data disponível acima."
+          )}
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-white/80">Seu nome</label>
+          <label htmlFor="bk-name" className={label}>
+            Seu nome
+          </label>
           <input
+            id="bk-name"
             required
+            autoComplete="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full rounded border border-white/10 bg-black/30 px-3 py-2 text-sm text-white"
+            className={field}
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-white/80">WhatsApp</label>
+          <label htmlFor="bk-phone" className={label}>
+            WhatsApp
+          </label>
           <input
+            id="bk-phone"
             required
+            type="tel"
+            autoComplete="tel"
             value={phone}
             onChange={(e) => setPhone(formatPhone(e.target.value))}
             inputMode="numeric"
             placeholder="(11) 90000-0000"
-            className="w-full rounded border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder-white/30"
+            className={field}
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-white/80">Observações (opcional)</label>
+          <label htmlFor="bk-notes" className={label}>
+            Observações <span className={`font-normal ${theme.muted}`}>(opcional)</span>
+          </label>
           <textarea
+            id="bk-notes"
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={2}
-            className="w-full rounded border border-white/10 bg-black/30 px-3 py-2 text-sm text-white"
+            placeholder="Horário, local do evento, dúvidas…"
+            className={`${field} resize-none`}
           />
         </div>
 
-        {message && message.type === "error" && <p className="text-sm text-red-400">{message.text}</p>}
+        {message?.type === "error" && (
+          <p className={`text-sm font-medium ${dark ? "text-red-300" : "text-red-600"}`} role="alert">
+            {message.text}
+          </p>
+        )}
 
         <button
           type="submit"
           disabled={isPending}
-          className="w-full rounded-full py-3 text-sm font-semibold text-white disabled:opacity-50"
+          className="h-12 w-full rounded-full text-[15px] font-semibold text-white transition-[transform,opacity] duration-200 active:scale-[0.98] disabled:opacity-60"
           style={{ backgroundColor: accent }}
         >
-          {isPending ? "Enviando..." : "Solicitar reserva"}
+          {isPending ? "Enviando…" : "Solicitar reserva"}
         </button>
       </form>
-    </div>
+    </section>
   );
 }

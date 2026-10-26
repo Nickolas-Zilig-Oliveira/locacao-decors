@@ -1,8 +1,24 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getCategories, getCategoryItemCounts, getItems, getTenantBySlug } from "@/lib/data/catalog";
 import { isCurrentUserTenantAdmin } from "@/lib/data/admin";
 import { whatsappLink } from "@/lib/whatsapp";
 import { CatalogShell } from "./catalog-shell";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ tenantSlug: string }>;
+}): Promise<Metadata> {
+  const { tenantSlug } = await params;
+  const tenant = await getTenantBySlug(tenantSlug);
+  if (!tenant) return {};
+  return {
+    title: `${tenant.name} · Catálogo`,
+    description: tenant.description ?? `Catálogo de locação de decoração da ${tenant.name}.`,
+    icons: tenant.logo_url ? { icon: tenant.logo_url, apple: tenant.logo_url } : undefined,
+  };
+}
 
 export default async function TenantCatalogPage({
   params,

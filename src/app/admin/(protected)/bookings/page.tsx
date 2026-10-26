@@ -17,7 +17,7 @@ export default async function AdminBookingsPage() {
   return (
     <div>
       <div className="mb-1 flex items-center justify-between">
-        <h1 className="text-xl font-bold text-neutral-900">Pedidos do site</h1>
+        <h1 className="text-2xl font-bold text-neutral-900 sm:text-[28px]">Pedidos do site</h1>
       </div>
       <p className="mb-6 text-sm text-neutral-500">
         Pedidos de reserva que clientes enviaram direto pela sua vitrine pública, escolhendo a
@@ -34,7 +34,7 @@ export default async function AdminBookingsPage() {
           return (
             <div
               key={b.id}
-              className="flex flex-col gap-3 rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between"
+              className="flex flex-col gap-3 rounded-2xl border border-neutral-200 bg-white p-4 sm:flex-row sm:items-center sm:justify-between"
             >
               <div>
                 <div className="flex items-center gap-2">

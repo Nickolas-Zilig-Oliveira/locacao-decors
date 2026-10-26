@@ -21,23 +21,24 @@ export function NewCategoryForm() {
   }
 
   return (
-    <form ref={formRef} action={handleSubmit} className="flex flex-wrap items-start gap-2">
-      <div>
+    <form ref={formRef} action={handleSubmit}>
+      <div className="flex gap-2">
         <input
           name="name"
           required
-          placeholder="Ex: Festa Infantil"
-          className="w-56 rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
+          placeholder="Nome da nova categoria"
+          aria-label="Nome da nova categoria"
+          className="h-10 min-w-0 flex-1 rounded-full border border-neutral-300 bg-white px-4 text-sm focus:border-[var(--accent-strong)] focus:outline-none focus:ring-4 focus:ring-[var(--accent)]/15 sm:max-w-xs"
         />
-        {error && <p className="mt-1 text-xs text-red-600">{error}</p>}
+        <button
+          type="submit"
+          disabled={isPending}
+          className="h-10 shrink-0 rounded-full bg-[var(--accent-strong)] px-4 text-sm font-semibold text-white transition hover:brightness-110 disabled:opacity-50"
+        >
+          {isPending ? "Criando…" : "Criar"}
+        </button>
       </div>
-      <button
-        type="submit"
-        disabled={isPending}
-        className="rounded-full bg-neutral-900 px-4 py-2 text-sm font-semibold text-white hover:bg-neutral-800 disabled:opacity-50"
-      >
-        {isPending ? "Criando..." : "+ Nova categoria"}
-      </button>
+      {error && <p className="mt-1.5 px-1 text-xs text-red-600">{error}</p>}
     </form>
   );
 }

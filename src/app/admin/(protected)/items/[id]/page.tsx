@@ -26,7 +26,7 @@ export default async function EditItemPage({
 
   return (
     <div>
-      <h1 className="mb-6 text-xl font-bold text-neutral-900">Editar item</h1>
+      <h1 className="mb-6 text-2xl font-bold text-neutral-900 sm:text-[28px]">Editar item</h1>
       <ItemForm item={item} categories={categories} existingComponents={existingComponents} />
     </div>
   );

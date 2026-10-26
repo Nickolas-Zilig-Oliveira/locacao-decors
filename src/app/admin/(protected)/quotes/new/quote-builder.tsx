@@ -87,7 +87,7 @@ export function QuoteBuilder({
 
   return (
     <form action={handleSubmit} className="space-y-6">
-      <section className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
+      <section className="rounded-2xl border border-neutral-200 bg-white p-5">
         <h2 className="mb-3 font-medium">Cliente</h2>
         <div className="grid gap-3 sm:grid-cols-2">
           <div>
@@ -150,7 +150,7 @@ export function QuoteBuilder({
         </div>
       </section>
 
-      <section className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
+      <section className="rounded-2xl border border-neutral-200 bg-white p-5">
         <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <h2 className="font-medium">Itens de locação</h2>
           <div className="flex flex-col gap-2 sm:flex-row">
@@ -258,7 +258,7 @@ export function QuoteBuilder({
         ))}
       </section>
 
-      <section className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
+      <section className="rounded-2xl border border-neutral-200 bg-white p-5">
         <h2 className="mb-3 font-medium">Valores</h2>
         <div className="grid gap-3 sm:grid-cols-2">
           <div>

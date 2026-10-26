@@ -48,7 +48,7 @@ export function ChangePasswordForm() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
+          className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-[var(--accent-strong)] focus:outline-none focus:ring-4 focus:ring-[var(--accent)]/15"
         />
       </div>
       <div>
@@ -58,7 +58,7 @@ export function ChangePasswordForm() {
           value={confirm}
           onChange={(e) => setConfirm(e.target.value)}
           required
-          className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
+          className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-[var(--accent-strong)] focus:outline-none focus:ring-4 focus:ring-[var(--accent)]/15"
         />
       </div>
       {error && <p className="text-sm text-red-600">{error}</p>}
@@ -66,7 +66,7 @@ export function ChangePasswordForm() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="rounded-full bg-neutral-900 px-6 py-2.5 text-sm font-semibold text-white hover:bg-neutral-800 disabled:opacity-50"
+        className="rounded-full bg-[var(--accent-strong)] px-6 py-2.5 text-sm font-semibold text-white hover:brightness-110 disabled:opacity-50"
       >
         {isSubmitting ? "Salvando..." : "Trocar senha"}
       </button>

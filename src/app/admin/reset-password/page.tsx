@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { AuthShell, authButton, authField, authLabel } from "../auth-shell";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
@@ -68,60 +69,57 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-neutral-950 px-4 text-white">
-      <div className="w-full max-w-sm">
-        <div className="mb-8 text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/40">Ziligz</p>
-          <h1 className="mt-2 text-xl font-bold">Nova senha</h1>
-          <p className="mt-1 text-sm text-white/50">Defina a nova senha da sua conta.</p>
-        </div>
-
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-2xl backdrop-blur">
-          {success ? (
-            <p className="text-center text-sm text-green-400">
-              Senha redefinida! Levando você para o login...
+    <AuthShell title="Nova senha" subtitle="Escolha uma senha com pelo menos 6 caracteres.">
+      {success ? (
+        <p className="text-center text-sm text-emerald-300" role="status">
+          Senha alterada. Levando você para o login…
+        </p>
+      ) : invalid && !ready ? (
+        <p className="text-center text-sm leading-relaxed text-white/70">
+          Esse link expirou ou já foi usado. Volte ao login e peça um novo em “Esqueci minha senha”.
+        </p>
+      ) : !ready ? (
+        <p className="text-center text-sm text-white/50">Verificando o link…</p>
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="reset-password" className={authLabel}>
+              Nova senha
+            </label>
+            <input
+              id="reset-password"
+              type="password"
+              required
+              autoComplete="new-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className={authField}
+            />
+          </div>
+          <div>
+            <label htmlFor="reset-confirm" className={authLabel}>
+              Confirmar senha
+            </label>
+            <input
+              id="reset-confirm"
+              type="password"
+              required
+              autoComplete="new-password"
+              value={confirm}
+              onChange={(e) => setConfirm(e.target.value)}
+              className={authField}
+            />
+          </div>
+          {error && (
+            <p className="rounded-xl bg-red-500/10 px-3.5 py-2.5 text-sm text-red-300" role="alert">
+              {error}
             </p>
-          ) : invalid && !ready ? (
-            <p className="text-center text-sm text-white/70">
-              Esse link é inválido ou expirou. Volte para a tela de login e peça um novo em &quot;Esqueci
-              minha senha&quot;.
-            </p>
-          ) : !ready ? (
-            <p className="text-center text-sm text-white/50">Verificando link...</p>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="mb-1 block text-xs font-medium text-white/60">Nova senha</label>
-                <input
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2.5 text-sm text-white outline-none focus:border-white/30"
-                />
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-medium text-white/60">Confirmar senha</label>
-                <input
-                  type="password"
-                  required
-                  value={confirm}
-                  onChange={(e) => setConfirm(e.target.value)}
-                  className="w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2.5 text-sm text-white outline-none focus:border-white/30"
-                />
-              </div>
-              {error && <p className="text-sm text-red-400">{error}</p>}
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full rounded-full bg-white py-2.5 text-sm font-semibold text-neutral-900 transition hover:bg-neutral-200 disabled:opacity-50"
-              >
-                {isSubmitting ? "Salvando..." : "Salvar nova senha"}
-              </button>
-            </form>
           )}
-        </div>
-      </div>
-    </main>
+          <button type="submit" disabled={isSubmitting} className={`${authButton} mt-2`}>
+            {isSubmitting ? "Salvando…" : "Salvar nova senha"}
+          </button>
+        </form>
+      )}
+    </AuthShell>
   );
 }

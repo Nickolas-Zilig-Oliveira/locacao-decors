@@ -47,13 +47,13 @@ export default async function QuoteViewPage({
           href={`/admin/quotes/${quote.id}/pdf`}
           target="_blank"
           rel="noreferrer"
-          className="flex items-center gap-2 rounded-full bg-neutral-900 px-4 py-2 text-sm font-semibold text-white hover:bg-neutral-800"
+          className="flex items-center gap-2 rounded-full bg-[var(--accent-strong)] px-4 py-2 text-sm font-semibold text-white hover:brightness-110"
         >
           Baixar PDF
         </a>
       </div>
 
-      <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm sm:p-8 print:border-0 print:p-0 print:shadow-none">
+      <div className="rounded-2xl border border-neutral-200 bg-white p-6 sm:p-8 print:border-0 print:p-0 print:shadow-none">
         <header className="border-b border-neutral-200 pb-4">
           <h1 className="text-lg font-bold">{tenant.name}</h1>
           {tenant.cnpj && <p className="text-sm text-neutral-600">CNPJ: {tenant.cnpj}</p>}

@@ -25,20 +25,20 @@ export default async function CaixaPage() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-xl font-bold text-neutral-900">Fluxo de caixa</h1>
+        <h1 className="text-2xl font-bold text-neutral-900 sm:text-[28px]">Fluxo de caixa</h1>
         <p className="text-sm text-neutral-500">Entradas e pendências dos seus contratos.</p>
       </div>
 
       <div className="mb-6 grid grid-cols-3 gap-2 sm:gap-3">
-        <div className="rounded-2xl border border-neutral-200 bg-white p-3 shadow-sm sm:p-5">
+        <div className="rounded-2xl border border-neutral-200 bg-white p-3 sm:p-5">
           <p className="text-[11px] font-medium text-neutral-500 sm:text-xs">Total em contratos</p>
           <p className="mt-1 text-base font-bold text-neutral-900 sm:text-2xl">{money(totalContratos)}</p>
         </div>
-        <div className="rounded-2xl border border-neutral-200 bg-white p-3 shadow-sm sm:p-5">
+        <div className="rounded-2xl border border-neutral-200 bg-white p-3 sm:p-5">
           <p className="text-[11px] font-medium text-neutral-500 sm:text-xs">Total recebido</p>
           <p className="mt-1 text-base font-bold text-green-600 sm:text-2xl">{money(totalRecebido)}</p>
         </div>
-        <div className="rounded-2xl border border-neutral-200 bg-white p-3 shadow-sm sm:p-5">
+        <div className="rounded-2xl border border-neutral-200 bg-white p-3 sm:p-5">
           <p className="text-[11px] font-medium text-neutral-500 sm:text-xs">Total a receber</p>
           <p className="mt-1 text-base font-bold text-amber-600 sm:text-2xl">{money(totalAReceber)}</p>
         </div>
@@ -47,7 +47,7 @@ export default async function CaixaPage() {
       {/* Mobile: labeled cards */}
       <div className="space-y-3 sm:hidden">
         {rows.map(({ quote, total, toReceive }) => (
-          <div key={quote.id} className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm">
+          <div key={quote.id} className="rounded-2xl border border-neutral-200 bg-white p-4">
             <div className="mb-3 flex items-start justify-between gap-2">
               <p className="min-w-0 truncate text-sm font-semibold text-neutral-900">
                 #{quote.number} · {quote.customer_name}
@@ -87,7 +87,7 @@ export default async function CaixaPage() {
       </div>
 
       {/* Desktop: table */}
-      <div className="hidden overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm sm:block">
+      <div className="hidden overflow-hidden rounded-2xl border border-neutral-200 bg-white sm:block">
         <div className="grid grid-cols-6 gap-2 border-b border-neutral-100 bg-neutral-50 px-5 py-3 text-xs font-semibold text-neutral-500">
           <span>Contrato</span>
           <span>Cliente</span>

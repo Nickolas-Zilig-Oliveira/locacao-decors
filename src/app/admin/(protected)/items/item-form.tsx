@@ -166,7 +166,7 @@ export function ItemForm({
 
       <div className="grid gap-5 lg:grid-cols-[220px_1fr]">
         {/* Photo */}
-        <section className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm">
+        <section className="rounded-2xl border border-neutral-200 bg-white p-4">
           <p className="mb-3 text-sm font-semibold text-neutral-900">Foto do item</p>
           <div className="mb-3 aspect-[3/4] w-full overflow-hidden rounded-xl bg-neutral-100">
             {imageUrl ? (
@@ -194,7 +194,7 @@ export function ItemForm({
         </section>
 
         {/* Basic info */}
-        <section className="space-y-4 rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
+        <section className="space-y-4 rounded-2xl border border-neutral-200 bg-white p-5">
           <p className="text-sm font-semibold text-neutral-900">Informações do item</p>
 
           <div>
@@ -206,7 +206,7 @@ export function ItemForm({
                 onClick={() => setIsKit(true)}
                 className={`flex-1 rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${
                   isKit
-                    ? "border-neutral-900 bg-neutral-900 text-white"
+                    ? "border-[var(--accent-strong)] bg-[var(--accent-strong)] text-white"
                     : "border-neutral-300 text-neutral-600 hover:bg-neutral-50"
                 }`}
               >
@@ -217,7 +217,7 @@ export function ItemForm({
                 onClick={() => setIsKit(false)}
                 className={`flex-1 rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${
                   !isKit
-                    ? "border-neutral-900 bg-neutral-900 text-white"
+                    ? "border-[var(--accent-strong)] bg-[var(--accent-strong)] text-white"
                     : "border-neutral-300 text-neutral-600 hover:bg-neutral-50"
                 }`}
               >
@@ -237,7 +237,7 @@ export function ItemForm({
               onChange={(e) => setName(e.target.value)}
               placeholder="Ex: Painel Redondo Baby"
               required
-              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
+              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-[var(--accent-strong)] focus:outline-none focus:ring-4 focus:ring-[var(--accent)]/15"
             />
           </div>
 
@@ -247,7 +247,7 @@ export function ItemForm({
               <select
                 name="category_id"
                 defaultValue={item?.category_id ?? ""}
-                className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
+                className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-[var(--accent-strong)] focus:outline-none focus:ring-4 focus:ring-[var(--accent)]/15"
               >
                 <option value="">Sem categoria</option>
                 {categories.map((c) => (
@@ -269,7 +269,7 @@ export function ItemForm({
                 }}
                 placeholder="0,00"
                 required
-                className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
+                className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-[var(--accent-strong)] focus:outline-none focus:ring-4 focus:ring-[var(--accent)]/15"
               />
             </div>
             <div>
@@ -282,7 +282,7 @@ export function ItemForm({
                 onKeyDown={blockNonNumericKeys}
                 defaultValue={item?.piece_count ?? ""}
                 placeholder="0"
-                className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
+                className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-[var(--accent-strong)] focus:outline-none focus:ring-4 focus:ring-[var(--accent)]/15"
               />
             </div>
           </div>
@@ -295,14 +295,14 @@ export function ItemForm({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Detalhes que aparecem na página do item na vitrine"
-              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
+              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-[var(--accent-strong)] focus:outline-none focus:ring-4 focus:ring-[var(--accent)]/15"
             />
           </div>
         </section>
       </div>
 
       {/* Kit components */}
-      <section className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
+      <section className="rounded-2xl border border-neutral-200 bg-white p-5">
         <div className="mb-1 flex items-center justify-between">
           <p className="text-sm font-semibold text-neutral-900">Itens inclusos no kit</p>
           <button
@@ -357,7 +357,7 @@ export function ItemForm({
                     onBlur={() => setSuggestFor((v) => (v === i ? null : v))}
                     placeholder="Ex: Urso Frederico"
                     autoComplete="off"
-                    className="w-full rounded-lg border border-neutral-300 px-3 py-1.5 text-sm focus:border-neutral-900 focus:outline-none"
+                    className="w-full rounded-lg border border-neutral-300 px-3 py-1.5 text-sm focus:border-[var(--accent-strong)] focus:outline-none focus:ring-4 focus:ring-[var(--accent)]/15"
                   />
                   {suggestFor === i && componentSuggestions(c.name).length > 0 && (
                     <div className="absolute left-0 right-0 top-full z-10 mt-1 max-h-48 overflow-y-auto rounded-lg border border-neutral-200 bg-white shadow-lg">
@@ -402,7 +402,7 @@ export function ItemForm({
                     onKeyDown={blockNonNumericKeys}
                     value={c.quantity}
                     onChange={(e) => updateComponent(i, { quantity: Number(e.target.value) || 1 })}
-                    className="w-full rounded-lg border border-neutral-300 px-2 py-1.5 text-sm focus:border-neutral-900 focus:outline-none"
+                    className="w-full rounded-lg border border-neutral-300 px-2 py-1.5 text-sm focus:border-[var(--accent-strong)] focus:outline-none focus:ring-4 focus:ring-[var(--accent)]/15"
                   />
                 </div>
                 <div>
@@ -418,7 +418,7 @@ export function ItemForm({
                       });
                     }}
                     placeholder="0,00"
-                    className="w-full rounded-lg border border-neutral-300 px-2 py-1.5 text-sm focus:border-neutral-900 focus:outline-none"
+                    className="w-full rounded-lg border border-neutral-300 px-2 py-1.5 text-sm focus:border-[var(--accent-strong)] focus:outline-none focus:ring-4 focus:ring-[var(--accent)]/15"
                   />
                 </div>
                 <div>
@@ -434,7 +434,7 @@ export function ItemForm({
                       });
                     }}
                     placeholder="0,00"
-                    className="w-full rounded-lg border border-neutral-300 px-2 py-1.5 text-sm focus:border-neutral-900 focus:outline-none"
+                    className="w-full rounded-lg border border-neutral-300 px-2 py-1.5 text-sm focus:border-[var(--accent-strong)] focus:outline-none focus:ring-4 focus:ring-[var(--accent)]/15"
                   />
                 </div>
               </div>
@@ -448,7 +448,7 @@ export function ItemForm({
       <button
         type="submit"
         disabled={isPending}
-        className="rounded-full bg-neutral-900 px-6 py-2.5 text-sm font-semibold text-white hover:bg-neutral-800 disabled:opacity-50"
+        className="rounded-full bg-[var(--accent-strong)] px-6 py-2.5 text-sm font-semibold text-white hover:brightness-110 disabled:opacity-50"
       >
         {isPending ? "Salvando..." : "Salvar item"}
       </button>

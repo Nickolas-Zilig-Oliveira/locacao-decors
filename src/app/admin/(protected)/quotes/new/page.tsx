@@ -16,7 +16,7 @@ export default async function NewQuotePage({
     <div>
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-neutral-900">Novo contrato</h1>
+          <h1 className="text-2xl font-bold text-neutral-900 sm:text-[28px]">Novo contrato</h1>
           <p className="text-sm text-neutral-500">
             Monte o contrato escolhendo o cliente, os itens e os valores.
           </p>

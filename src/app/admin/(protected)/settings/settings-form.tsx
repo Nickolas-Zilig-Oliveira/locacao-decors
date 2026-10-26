@@ -59,7 +59,7 @@ export function SettingsForm({ tenant }: { tenant: Tenant }) {
   return (
     <form action={handleSubmit} className="max-w-3xl space-y-5">
       <div className="grid gap-5 lg:grid-cols-[220px_1fr]">
-        <section className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm">
+        <section className="rounded-2xl border border-neutral-200 bg-white p-4">
           <p className="mb-3 text-sm font-semibold text-neutral-900">Logo da loja</p>
           <div className="mb-3 flex aspect-square w-full items-center justify-center overflow-hidden rounded-xl bg-neutral-100">
             {logoUrl ? (
@@ -80,7 +80,7 @@ export function SettingsForm({ tenant }: { tenant: Tenant }) {
           </label>
         </section>
 
-        <section className="space-y-4 rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
+        <section className="space-y-4 rounded-2xl border border-neutral-200 bg-white p-5">
           <p className="text-sm font-semibold text-neutral-900">Dados da loja</p>
 
           <div>
@@ -90,7 +90,7 @@ export function SettingsForm({ tenant }: { tenant: Tenant }) {
               defaultValue={tenant.name}
               required
               maxLength={15}
-              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
+              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-[var(--accent-strong)] focus:outline-none focus:ring-4 focus:ring-[var(--accent)]/15"
             />
             <p className="mt-1 text-[11px] text-neutral-400">
               Máx. 15 caracteres — nome curto cabe melhor no topo da vitrine.
@@ -104,7 +104,7 @@ export function SettingsForm({ tenant }: { tenant: Tenant }) {
                 name="city"
                 defaultValue={tenant.city ?? ""}
                 placeholder="Ex: São Paulo - SP"
-                className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
+                className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-[var(--accent-strong)] focus:outline-none focus:ring-4 focus:ring-[var(--accent)]/15"
               />
             </div>
             <div>
@@ -129,7 +129,7 @@ export function SettingsForm({ tenant }: { tenant: Tenant }) {
                 }}
                 inputMode="numeric"
                 placeholder="(11) 90000-0000"
-                className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
+                className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-[var(--accent-strong)] focus:outline-none focus:ring-4 focus:ring-[var(--accent)]/15"
               />
             </div>
             <div>
@@ -139,7 +139,7 @@ export function SettingsForm({ tenant }: { tenant: Tenant }) {
                 name="email"
                 defaultValue={tenant.email ?? ""}
                 placeholder="contato@sualoja.com"
-                className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
+                className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-[var(--accent-strong)] focus:outline-none focus:ring-4 focus:ring-[var(--accent)]/15"
               />
             </div>
             <div>
@@ -148,7 +148,7 @@ export function SettingsForm({ tenant }: { tenant: Tenant }) {
                 name="instagram"
                 defaultValue={tenant.instagram ?? ""}
                 placeholder="@sualoja ou link do perfil"
-                className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
+                className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-[var(--accent-strong)] focus:outline-none focus:ring-4 focus:ring-[var(--accent)]/15"
               />
               <p className="mt-1 text-[11px] text-neutral-400">Aparece como link no rodapé da vitrine.</p>
             </div>
@@ -162,7 +162,7 @@ export function SettingsForm({ tenant }: { tenant: Tenant }) {
                 }}
                 inputMode="numeric"
                 placeholder="00.000.000/0000-00"
-                className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
+                className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-[var(--accent-strong)] focus:outline-none focus:ring-4 focus:ring-[var(--accent)]/15"
               />
             </div>
             <div>
@@ -171,7 +171,7 @@ export function SettingsForm({ tenant }: { tenant: Tenant }) {
                 name="address"
                 defaultValue={tenant.address ?? ""}
                 placeholder="Rua, número, bairro"
-                className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
+                className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-[var(--accent-strong)] focus:outline-none focus:ring-4 focus:ring-[var(--accent)]/15"
               />
             </div>
           </div>
@@ -185,7 +185,7 @@ export function SettingsForm({ tenant }: { tenant: Tenant }) {
               rows={2}
               defaultValue={tenant.description ?? ""}
               placeholder="Uma frase curta sobre sua loja"
-              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
+              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-[var(--accent-strong)] focus:outline-none focus:ring-4 focus:ring-[var(--accent)]/15"
             />
           </div>
 
@@ -198,13 +198,13 @@ export function SettingsForm({ tenant }: { tenant: Tenant }) {
               rows={2}
               defaultValue={tenant.pickup_notes ?? ""}
               placeholder="Ex: retirada das 9h às 18h, de segunda a sábado"
-              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
+              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-[var(--accent-strong)] focus:outline-none focus:ring-4 focus:ring-[var(--accent)]/15"
             />
           </div>
         </section>
       </div>
 
-      <section className="space-y-4 rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
+      <section className="space-y-4 rounded-2xl border border-neutral-200 bg-white p-5">
         <div>
           <p className="text-sm font-semibold text-neutral-900">Responsável pela loja</p>
           <p className="text-xs text-neutral-400">
@@ -218,7 +218,7 @@ export function SettingsForm({ tenant }: { tenant: Tenant }) {
               name="owner_name"
               defaultValue={tenant.owner_name ?? ""}
               placeholder="Nome completo"
-              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
+              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-[var(--accent-strong)] focus:outline-none focus:ring-4 focus:ring-[var(--accent)]/15"
             />
           </div>
           <div>
@@ -231,7 +231,7 @@ export function SettingsForm({ tenant }: { tenant: Tenant }) {
               }}
               inputMode="numeric"
               placeholder="(11) 90000-0000"
-              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
+              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-[var(--accent-strong)] focus:outline-none focus:ring-4 focus:ring-[var(--accent)]/15"
             />
           </div>
         </div>
@@ -243,7 +243,7 @@ export function SettingsForm({ tenant }: { tenant: Tenant }) {
       <button
         type="submit"
         disabled={isPending}
-        className="rounded-full bg-neutral-900 px-6 py-2.5 text-sm font-semibold text-white hover:bg-neutral-800 disabled:opacity-50"
+        className="rounded-full bg-[var(--accent-strong)] px-6 py-2.5 text-sm font-semibold text-white hover:brightness-110 disabled:opacity-50"
       >
         {isPending ? "Salvando..." : "Salvar configurações"}
       </button>
