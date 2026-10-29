@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 const MAX_FRAME_WIDTH = 300;
 const MAX_FRAME_HEIGHT = 420;
-const OUTPUT_LONG_SIDE = 1400;
+const OUTPUT_LONG_SIDE = 1200;
 const MAX_ZOOM = 3;
 
 type Props = {
@@ -108,7 +108,7 @@ export function ImageCropper({ file, aspectRatio = 3 / 4, onCancel, onConfirm }:
 
       ctx.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, outputW, outputH);
 
-      const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.92));
+      const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.82));
       if (!blob) throw new Error("failed to export");
       onConfirm(blob);
     } finally {

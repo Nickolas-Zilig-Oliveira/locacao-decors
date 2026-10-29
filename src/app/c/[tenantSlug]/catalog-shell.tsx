@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import type { Category, Item, Tenant } from "@/lib/types";
 import { SiteFooter } from "./site-footer";
@@ -282,13 +283,13 @@ export function CatalogShell({
               >
                 <div className={`relative aspect-[3/4] overflow-hidden ${theme.cardImgBg}`}>
                   {item.images?.[0] ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
+                    <Image
                       src={item.images[0]}
                       alt={item.name}
-                      loading={index < 4 ? "eager" : "lazy"}
-                      decoding="async"
-                      className="h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04]"
+                      fill
+                      sizes="(min-width: 1024px) 280px, (min-width: 768px) 30vw, 48vw"
+                      priority={index < 2}
+                      className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04]"
                     />
                   ) : (
                     <div className={`flex h-full w-full items-center justify-center text-xs ${theme.muted}`}>

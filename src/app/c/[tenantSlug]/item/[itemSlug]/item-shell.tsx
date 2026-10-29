@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import type { Item, Tenant } from "@/lib/types";
 import { SiteFooter } from "../../site-footer";
@@ -55,8 +56,15 @@ export function ItemShell({ tenant, tenantSlug, item, blockedDates, waLink, isAd
           <div className="md:sticky md:top-24 md:self-start">
             <div className={`aspect-[3/4] overflow-hidden rounded-3xl ${theme.cardImgBg}`}>
               {item.images?.[0] ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={item.images[0]} alt={item.name} className="h-full w-full object-cover" />
+                <Image
+                  src={item.images[0]}
+                  alt={item.name}
+                  width={900}
+                  height={1200}
+                  sizes="(min-width: 768px) 480px, 92vw"
+                  priority
+                  className="h-full w-full object-cover"
+                />
               ) : (
                 <div className={`flex h-full w-full items-center justify-center text-sm ${theme.muted}`}>Sem foto</div>
               )}
@@ -91,8 +99,7 @@ export function ItemShell({ tenant, tenantSlug, item, blockedDates, waLink, isAd
                     <li key={i} className="flex items-center gap-3 px-4 py-3">
                       <div className={`h-11 w-11 shrink-0 overflow-hidden rounded-xl ${theme.cardImgBg}`}>
                         {c.photo_url && (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img src={c.photo_url} alt="" loading="lazy" className="h-full w-full object-cover" />
+                          <Image src={c.photo_url} alt="" width={88} height={88} className="h-full w-full object-cover" />
                         )}
                       </div>
                       <p className="min-w-0 flex-1 text-sm font-medium">{c.name}</p>
