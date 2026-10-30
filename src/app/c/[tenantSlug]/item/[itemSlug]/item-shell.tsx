@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import type { Item, Tenant } from "@/lib/types";
 import { SiteFooter } from "../../site-footer";
 import { StoreHeader, headerIconBtn } from "../../store-header";
@@ -25,8 +26,17 @@ export function ItemShell({ tenant, tenantSlug, item, blockedDates, waLink, isAd
   const theme = storeTheme(dark);
   useDocumentTheme(pageBg, dark);
 
+  const [reservaVisible, setReservaVisible] = useState(false);
   const catalogHref = `/c/${tenantSlug}`;
   const pieces = item.piece_count ?? item.components.reduce((sum, c) => sum + (c.quantity || 0), 0);
+
+  useEffect(() => {
+    const el = document.getElementById("reserva");
+    if (!el) return;
+    const io = new IntersectionObserver(([entry]) => setReservaVisible(entry.isIntersecting), { threshold: 0.15 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   return (
     <div
@@ -114,6 +124,9 @@ export function ItemShell({ tenant, tenantSlug, item, blockedDates, waLink, isAd
               tenantId={tenant.id}
               itemId={item.id}
               itemName={item.name}
+              itemPrice={item.price}
+              itemImage={item.images?.[0] ?? null}
+              catalogHref={catalogHref}
               tenantPhone={tenant.phone}
               blockedDates={blockedDates}
               accent={accent}
@@ -128,7 +141,7 @@ export function ItemShell({ tenant, tenantSlug, item, blockedDates, waLink, isAd
       {isAdminViewer && (
         <Link
           href="/admin"
-          className="fixed bottom-5 left-5 z-20 flex h-10 items-center gap-1 rounded-full bg-neutral-950/85 pl-2.5 pr-4 text-sm font-semibold text-white shadow-lg backdrop-blur hover:bg-neutral-950"
+          className="fixed bottom-24 left-5 z-20 flex h-10 items-center gap-1 rounded-full bg-neutral-950/85 pl-2.5 pr-4 text-sm font-semibold text-white shadow-lg backdrop-blur hover:bg-neutral-950 md:bottom-5"
         >
           <ChevronLeftIcon className="h-4 w-4" />
           Painel
@@ -140,7 +153,7 @@ export function ItemShell({ tenant, tenantSlug, item, blockedDates, waLink, isAd
           href={waLink}
           target="_blank"
           rel="noreferrer"
-          className="fixed z-20 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_10px_30px_-8px_rgba(37,211,102,0.6)] transition-transform duration-200 hover:scale-105 active:scale-95"
+          className="fixed z-20 hidden h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_10px_30px_-8px_rgba(37,211,102,0.6)] transition-transform duration-200 hover:scale-105 active:scale-95 md:flex"
           style={{
             right: "max(1.25rem, env(safe-area-inset-right))",
             bottom: "max(1.25rem, env(safe-area-inset-bottom))",
@@ -150,6 +163,46 @@ export function ItemShell({ tenant, tenantSlug, item, blockedDates, waLink, isAd
           <WhatsAppIcon className="h-7 w-7" />
         </a>
       )}
+
+      <div
+        className={`fixed inset-x-0 bottom-0 z-30 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] md:hidden ${
+          reservaVisible ? "translate-y-full" : "translate-y-0"
+        }`}
+        style={{
+          backgroundColor: dark ? "#141417" : "#ffffff",
+          paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))",
+          boxShadow: "0 -12px 32px -16px rgba(0,0,0,0.35)",
+        }}
+        aria-hidden={reservaVisible}
+      >
+        <div className="flex items-center gap-3 px-4 pt-3">
+          <div className="min-w-0 flex-1">
+            <p className={`truncate text-xs ${theme.muted}`}>{item.name}</p>
+            <p className="font-display text-lg font-bold leading-tight tabular-nums">{formatBRL(item.price)}</p>
+          </div>
+          {waLink && (
+            <a
+              href={waLink}
+              target="_blank"
+              rel="noreferrer"
+              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#25D366] text-white transition-transform duration-200 active:scale-95"
+              aria-label="Tirar dúvidas no WhatsApp"
+              tabIndex={reservaVisible ? -1 : 0}
+            >
+              <WhatsAppIcon className="h-6 w-6" />
+            </a>
+          )}
+          <button
+            type="button"
+            tabIndex={reservaVisible ? -1 : 0}
+            onClick={() => document.getElementById("reserva")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+            className="h-12 shrink-0 rounded-full px-6 text-[15px] font-semibold text-white transition-transform duration-200 active:scale-[0.97]"
+            style={{ backgroundColor: accent }}
+          >
+            Reservar data
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

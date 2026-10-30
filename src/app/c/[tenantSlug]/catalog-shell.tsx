@@ -279,7 +279,8 @@ export function CatalogShell({
               <Link
                 key={item.id}
                 href={`/c/${tenantSlug}/item/${item.slug}`}
-                className={`group flex flex-col overflow-hidden rounded-2xl transition-[box-shadow,background-color] duration-300 ${theme.card}`}
+                className={`anim-rise group flex flex-col overflow-hidden rounded-2xl transition-[box-shadow,background-color] duration-300 ${theme.card}`}
+                style={{ ["--d" as string]: `${Math.min(index, 7) * 55}ms` }}
               >
                 <div className={`relative aspect-[3/4] overflow-hidden ${theme.cardImgBg}`}>
                   {item.images?.[0] ? (

@@ -68,12 +68,128 @@ select:focus-visible {
   scrollbar-color: color-mix(in srgb, currentColor 25%, transparent) transparent;
 }
 
+/* ── Motion ─────────────────────────────────────────────────────────────
+   Only transform + opacity. Entrances are driven by the scroll position
+   (CSS scroll-timeline) where supported, and simply visible elsewhere, so
+   content never stays hidden if a browser lacks the feature. */
+:root {
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes step-in {
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes draw-check {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+.page-in {
+  animation: page-in 320ms var(--ease-out) backwards;
+}
+
+.anim-rise {
+  animation: rise-in 800ms var(--ease-out) backwards;
+  animation-delay: var(--d, 0ms);
+}
+
+.anim-step {
+  animation: step-in 360ms var(--ease-out) backwards;
+}
+
+.anim-pop {
+  animation: pop-in 520ms var(--ease-out) backwards;
+}
+
+.anim-check {
+  stroke-dasharray: 30;
+  stroke-dashoffset: 30;
+  animation: draw-check 480ms 260ms var(--ease-out) forwards;
+}
+
+.float-slow {
+  animation: float-y 9s ease-in-out infinite;
+  animation-delay: var(--d, 0ms);
+}
+
+@supports (animation-timeline: view()) {
+  .reveal {
+    animation: rise-in linear both;
+    animation-timeline: view();
+    animation-range: entry 4% cover 26%;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal {
+    animation: none !important;
+  }
+  .anim-check {
+    stroke-dashoffset: 0;
   }
 }
 
