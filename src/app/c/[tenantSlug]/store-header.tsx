@@ -20,13 +20,14 @@ export function StoreHeader({ name, logoUrl, accent, homeHref, backHref, actions
       className="sticky top-0 z-30 px-4 pb-3 shadow-[0_6px_24px_-10px_rgba(0,0,0,0.45)] sm:px-6 lg:px-8"
       style={{ backgroundColor: accent, paddingTop: "max(0.75rem, env(safe-area-inset-top))" }}
     >
-      <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center gap-3">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-3">
+      <div className="flex w-full items-center gap-3">
         {backHref && (
           <Link href={backHref} className={headerIconBtn} aria-label="Voltar ao catálogo">
             <ChevronLeftIcon className="h-5 w-5" />
           </Link>
         )}
-        <Link href={homeHref} className="flex min-w-0 items-center gap-2.5">
+        <Link href={homeHref} className="flex min-w-0 flex-1 items-center gap-2.5 sm:flex-none">
           {logoUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -46,7 +47,7 @@ export function StoreHeader({ name, logoUrl, accent, homeHref, backHref, actions
         </Link>
 
         {actions && <div className="ml-auto flex shrink-0 items-center gap-2">{actions}</div>}
-
+      </div>
         {children}
       </div>
     </header>

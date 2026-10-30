@@ -58,10 +58,10 @@ export function SettingsForm({ tenant }: { tenant: Tenant }) {
 
   return (
     <form action={handleSubmit} className="max-w-3xl space-y-5">
-      <div className="grid gap-5 lg:grid-cols-[220px_1fr]">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-[220px_minmax(0,1fr)]">
         <section className="rounded-2xl border border-neutral-200 bg-white p-4">
           <p className="mb-3 text-sm font-semibold text-neutral-900">Logo da loja</p>
-          <div className="mb-3 flex aspect-square w-full items-center justify-center overflow-hidden rounded-xl bg-neutral-100">
+          <div className="mx-auto mb-3 flex aspect-square w-full max-w-[220px] items-center lg:max-w-none justify-center overflow-hidden rounded-xl bg-neutral-100">
             {logoUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={logoUrl} alt="" className="h-full w-full object-contain" />

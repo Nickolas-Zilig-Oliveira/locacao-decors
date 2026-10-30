@@ -32,15 +32,15 @@ export default async function CaixaPage() {
       <div className="mb-6 grid grid-cols-3 gap-2 sm:gap-3">
         <div className="rounded-2xl border border-neutral-200 bg-white p-3 sm:p-5">
           <p className="text-[11px] font-medium text-neutral-500 sm:text-xs">Total em contratos</p>
-          <p className="mt-1 text-base font-bold text-neutral-900 sm:text-2xl">{money(totalContratos)}</p>
+          <p className="mt-1 whitespace-nowrap text-[15px] font-bold tabular-nums text-neutral-900 min-[400px]:text-base sm:text-2xl">{money(totalContratos)}</p>
         </div>
         <div className="rounded-2xl border border-neutral-200 bg-white p-3 sm:p-5">
           <p className="text-[11px] font-medium text-neutral-500 sm:text-xs">Total recebido</p>
-          <p className="mt-1 text-base font-bold text-green-600 sm:text-2xl">{money(totalRecebido)}</p>
+          <p className="mt-1 whitespace-nowrap text-[15px] font-bold tabular-nums text-green-600 min-[400px]:text-base sm:text-2xl">{money(totalRecebido)}</p>
         </div>
         <div className="rounded-2xl border border-neutral-200 bg-white p-3 sm:p-5">
           <p className="text-[11px] font-medium text-neutral-500 sm:text-xs">Total a receber</p>
-          <p className="mt-1 text-base font-bold text-amber-600 sm:text-2xl">{money(totalAReceber)}</p>
+          <p className="mt-1 whitespace-nowrap text-[15px] font-bold tabular-nums text-amber-600 min-[400px]:text-base sm:text-2xl">{money(totalAReceber)}</p>
         </div>
       </div>
 

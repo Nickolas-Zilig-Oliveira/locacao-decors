@@ -62,7 +62,7 @@ export function ItemShell({ tenant, tenantSlug, item, blockedDates, waLink, isAd
       />
 
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-28 pt-5 sm:px-6 sm:pt-8 lg:px-8">
-        <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:gap-10 lg:gap-14">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:gap-10 lg:gap-14">
           <div className="md:sticky md:top-24 md:self-start">
             <div className={`aspect-[3/4] overflow-hidden rounded-3xl ${theme.cardImgBg}`}>
               {item.images?.[0] ? (
@@ -141,7 +141,7 @@ export function ItemShell({ tenant, tenantSlug, item, blockedDates, waLink, isAd
       {isAdminViewer && (
         <Link
           href="/admin"
-          className="fixed bottom-24 left-5 z-20 flex h-10 items-center gap-1 rounded-full bg-neutral-950/85 pl-2.5 pr-4 text-sm font-semibold text-white shadow-lg backdrop-blur hover:bg-neutral-950 md:bottom-5"
+          className={`fixed left-5 z-20 flex h-10 items-center gap-1 rounded-full bg-neutral-950/85 pl-2.5 pr-4 text-sm font-semibold text-white shadow-lg backdrop-blur transition-[bottom] duration-500 hover:bg-neutral-950 md:bottom-5 ${reservaVisible ? "bottom-5" : "bottom-24"}`}
         >
           <ChevronLeftIcon className="h-4 w-4" />
           Painel

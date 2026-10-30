@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { getItems, getTenantBySlug } from "@/lib/data/catalog";
-import { whatsappLink } from "@/lib/whatsapp";
 
 export const metadata: Metadata = {
   title: "Ziligz — catálogo, agenda e contratos para lojas de decoração",
@@ -86,12 +85,6 @@ export default async function Home() {
   const items = tenant ? await getItems(tenant.id).catch(() => []) : [];
   const photos = items.filter((i) => i.images?.[0]).slice(0, 5);
 
-  const contact = process.env.NEXT_PUBLIC_CONTACT_WHATSAPP
-    ? whatsappLink(
-        process.env.NEXT_PUBLIC_CONTACT_WHATSAPP,
-        "Oi! Vi o Ziligz e quero saber mais sobre o sistema para a minha loja de decoração."
-      )
-    : null;
 
   const primaryBtn =
     "group inline-flex h-13 items-center justify-center gap-2 rounded-full px-7 text-[15px] font-semibold text-white transition-[transform,background-color] duration-200 active:scale-[0.98]";
@@ -121,7 +114,7 @@ export default async function Home() {
           </nav>
         </header>
 
-        <div className="relative mx-auto grid w-full max-w-7xl items-center gap-10 px-5 pb-20 pt-6 sm:px-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-6 lg:pb-28 lg:pt-10">
+        <div className="relative mx-auto grid w-full max-w-7xl items-center gap-10 grid-cols-1 px-5 pb-20 pt-6 sm:px-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-6 lg:pb-28 lg:pt-10">
           <div className="relative z-10">
             <h1 className="anim-rise text-[44px] font-extrabold leading-[1.02] tracking-[-0.035em] sm:text-6xl lg:text-[68px]">
               Sua loja de festa, sempre aberta.
@@ -134,20 +127,9 @@ export default async function Home() {
                 Ver loja de exemplo
                 <ArrowIcon />
               </Link>
-              {contact ? (
-                <a
-                  href={contact}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex h-13 items-center rounded-full px-6 text-[15px] font-semibold ring-1 ring-inset ring-black/20 transition-colors hover:bg-black/5"
-                >
-                  Quero a minha loja
-                </a>
-              ) : (
-                <Link href="/admin/login" className="inline-flex h-13 items-center rounded-full px-6 text-[15px] font-semibold ring-1 ring-inset ring-black/20 transition-colors hover:bg-black/5">
+                              <Link href="/admin/login" className="inline-flex h-13 items-center rounded-full px-6 text-[15px] font-semibold ring-1 ring-inset ring-black/20 transition-colors hover:bg-black/5">
                   Entrar no painel
                 </Link>
-              )}
             </div>
             <p className="anim-rise mt-5 text-sm" style={{ ["--d" as string]: "260ms", color: "#6b5260" }}>
               R$ 100 por mês, tudo incluso.
@@ -160,13 +142,16 @@ export default async function Home() {
             <div aria-hidden className="absolute -right-4 bottom-0 h-40 w-28 rounded-t-full sm:h-56 sm:w-40" style={{ backgroundColor: PLUM }} />
 
             <div className="anim-rise relative mx-auto w-[300px] rounded-[42px] p-3 sm:w-[320px]" style={{ backgroundColor: PLUM, ["--d" as string]: "200ms" }}>
-              <div className="overflow-hidden rounded-[32px] bg-white">
+              <div className="relative overflow-hidden rounded-[32px] bg-white">
                 <iframe
                   src={DEMO_HREF}
-                  title="Loja de exemplo da Ziligz"
+                  title="Prévia da loja de exemplo"
                   loading="lazy"
-                  className="block h-[580px] w-full border-0 sm:h-[620px]"
+                  tabIndex={-1}
+                  aria-hidden
+                  className="pointer-events-none block h-[560px] w-full border-0 sm:h-[620px]"
                 />
+                <Link href={DEMO_HREF} className="absolute inset-0 z-10" aria-label="Abrir a loja de exemplo" />
               </div>
             </div>
           </div>
@@ -175,7 +160,7 @@ export default async function Home() {
 
       {/* Como funciona */}
       <section id="como" className="mx-auto w-full max-w-7xl px-5 py-24 sm:px-8 lg:py-32">
-        <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-20">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-20">
           <div>
             <h2 className="reveal text-4xl font-extrabold leading-[1.05] tracking-[-0.03em] sm:text-5xl">
               Do pedido ao contrato, sem planilha.
@@ -220,7 +205,7 @@ export default async function Home() {
 
       {/* Painel */}
       <section id="painel" className="relative" style={{ backgroundColor: PLUM, color: "#fff4f8" }}>
-        <div className="mx-auto grid w-full max-w-7xl gap-14 px-5 py-24 sm:px-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-16 lg:py-32">
+        <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-14 px-5 py-24 sm:px-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-16 lg:py-32">
           <div>
             <h2 className="reveal text-4xl font-extrabold leading-[1.05] tracking-[-0.03em] sm:text-5xl">
               Um painel completo para cuidar de tudo sozinha.
@@ -250,7 +235,7 @@ export default async function Home() {
                 ].map(([label, value], i) => (
                   <div key={label} className="rounded-2xl bg-white p-3">
                     <p className="text-[11px] font-semibold text-neutral-500">{label}</p>
-                    <p className="mt-1 text-lg font-bold tabular-nums" style={i === 1 ? { color: PINK_STRONG } : undefined}>
+                    <p className="mt-1 whitespace-nowrap text-base font-bold tabular-nums sm:text-lg" style={i === 1 ? { color: PINK_STRONG } : undefined}>
                       {value}
                     </p>
                   </div>
@@ -297,7 +282,7 @@ export default async function Home() {
               Fotos grandes, nome e preço à vista. Assim o cliente se apaixona pelo kit antes de mandar a primeira mensagem.
             </p>
           </div>
-          <ul className="no-scrollbar mx-auto mt-14 flex w-full max-w-7xl snap-x gap-4 overflow-x-auto px-5 pb-4 sm:px-8 lg:grid lg:grid-cols-5 lg:gap-5 lg:overflow-visible">
+          <ul className="no-scrollbar mx-auto mt-14 flex w-full max-w-7xl snap-x scroll-pl-5 gap-4 overflow-x-auto px-5 pb-4 sm:scroll-pl-8 sm:px-8 lg:grid lg:grid-cols-5 lg:gap-5 lg:overflow-visible">
             {photos.map((item, i) => (
               <li
                 key={item.id}
@@ -330,11 +315,11 @@ export default async function Home() {
       <section id="preco" className="relative overflow-hidden" style={{ backgroundColor: PINK, color: INK }}>
         <div aria-hidden className="absolute -left-24 -top-24 h-80 w-80 rounded-full" style={{ backgroundColor: "#f58db1" }} />
         <div aria-hidden className="absolute -bottom-32 right-[-5rem] h-96 w-72 rounded-t-full" style={{ backgroundColor: PLUM }} />
-        <div className="relative mx-auto grid w-full max-w-7xl gap-12 px-5 py-24 sm:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center lg:py-32">
+        <div className="relative mx-auto grid w-full max-w-7xl grid-cols-1 gap-12 px-5 py-24 sm:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center lg:py-32">
           <div>
             <h2 className="reveal text-4xl font-extrabold leading-[1.05] tracking-[-0.03em] sm:text-5xl">Um plano só, tudo incluso.</h2>
-            <p className="reveal mt-8 flex items-baseline gap-2">
-              <span className="font-display text-[88px] font-extrabold leading-none tracking-[-0.05em] sm:text-[120px]">R$ 100</span>
+            <p className="reveal mt-8 flex items-baseline gap-2 whitespace-nowrap">
+              <span className="font-display text-[72px] font-extrabold leading-none tracking-[-0.05em] min-[400px]:text-[88px] sm:text-[120px]">R$ 100</span>
               <span className="text-2xl font-bold">/mês</span>
             </p>
           </div>
@@ -356,17 +341,10 @@ export default async function Home() {
                 </li>
               ))}
             </ul>
-            {contact ? (
-              <a href={contact} target="_blank" rel="noreferrer" className={`${primaryBtn} mt-8 w-full`} style={{ backgroundColor: PLUM }}>
-                Quero a minha loja
-                <ArrowIcon />
-              </a>
-            ) : (
-              <Link href={DEMO_HREF} className={`${primaryBtn} mt-8 w-full`} style={{ backgroundColor: PLUM }}>
+                          <Link href={DEMO_HREF} className={`${primaryBtn} mt-8 w-full`} style={{ backgroundColor: PLUM }}>
                 Ver a loja de exemplo
                 <ArrowIcon />
               </Link>
-            )}
           </div>
         </div>
       </section>
@@ -410,7 +388,7 @@ export default async function Home() {
               </Link>
             </div>
           </div>
-          <p aria-hidden className="mt-16 select-none pb-[2vw] text-center font-display text-[30vw] font-extrabold leading-[0.85] tracking-[-0.06em]" style={{ color: PINK }}>
+          <p aria-hidden className="mt-16 select-none pb-[2vw] text-center font-display text-[36vw] font-extrabold leading-[0.85] tracking-[-0.06em]" style={{ color: PINK }}>
             ziligz
           </p>
           <p className="mt-6 text-sm" style={{ color: "#c9a5b6" }}>

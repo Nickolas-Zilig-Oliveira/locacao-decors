@@ -164,11 +164,11 @@ export function ItemForm({
     <form action={handleSubmit} className="max-w-3xl space-y-5">
       {item && <input type="hidden" name="id" value={item.id} />}
 
-      <div className="grid gap-5 lg:grid-cols-[220px_1fr]">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-[220px_minmax(0,1fr)]">
         {/* Photo */}
         <section className="rounded-2xl border border-neutral-200 bg-white p-4">
           <p className="mb-3 text-sm font-semibold text-neutral-900">Foto do item</p>
-          <div className="mb-3 aspect-[3/4] w-full overflow-hidden rounded-xl bg-neutral-100">
+          <div className="mx-auto mb-3 aspect-[3/4] w-full max-w-[220px] overflow-hidden lg:max-w-none rounded-xl bg-neutral-100">
             {imageUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={imageUrl} alt="" className="h-full w-full object-cover" />
