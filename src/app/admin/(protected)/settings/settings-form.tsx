@@ -2,9 +2,8 @@
 
 import { useState, useTransition } from "react";
 import type { Tenant } from "@/lib/types";
-import { createClient } from "@/lib/supabase/client";
 import { formatCNPJ, formatPhone } from "@/lib/masks";
-import { validateImageFile } from "@/lib/upload";
+import { prepareImage, uploadPhoto, validateImageFile } from "@/lib/upload";
 import { updateTenantSettings } from "./actions";
 
 export function SettingsForm({ tenant }: { tenant: Tenant }) {
@@ -28,16 +27,12 @@ export function SettingsForm({ tenant }: { tenant: Tenant }) {
     setIsUploading(true);
     setError(null);
     try {
-      const supabase = createClient();
-      const ext = file.name.split(".").pop();
-      const path = `${tenant.id}/logo-${crypto.randomUUID()}.${ext}`;
-      const { error: uploadError } = await supabase.storage.from("item-photos").upload(path, file);
-      if (uploadError) throw uploadError;
-      const { data } = supabase.storage.from("item-photos").getPublicUrl(path);
-      setLogoUrl(data.publicUrl);
-    } catch {
-      setError("Não foi possível enviar a logo. Tente novamente.");
+      const prepared = await prepareImage(file, { maxSide: 1200, keepAlpha: true });
+      setLogoUrl(await uploadPhoto(prepared, tenant.id, "logo-"));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Não consegui enviar a logo. Tente novamente.");
     } finally {
+      e.target.value = "";
       setIsUploading(false);
     }
   }

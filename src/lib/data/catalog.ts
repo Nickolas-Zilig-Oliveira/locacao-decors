@@ -45,9 +45,11 @@ export async function getItems(
   tipo?: "kit" | "avulso"
 ): Promise<Item[]> {
   const supabase = await createClient();
+  // The category join is only required when filtering by category; otherwise
+  // items without a category must still show up in the storefront.
   let query = supabase
     .from("items")
-    .select("*, categories!inner(slug)")
+    .select((categorySlug ? "*, categories!inner(slug)" : "*") as "*, categories!inner(slug)")
     .eq("tenant_id", tenantId)
     .eq("active", true);
 
