@@ -124,8 +124,8 @@ async function persistItem(
   if (!tenant) return { ok: false, error: "Sua sessão expirou. Entre de novo." };
 
   const supabase = await createClient();
-  const name = input.name.trim().slice(0, 120) || (opts.draft ? DRAFT_NAME : "");
-  if (!name) return { ok: false, error: "Dê um nome ao item." };
+  const typedName = input.name.trim().slice(0, 120);
+  if (!typedName && !opts.draft) return { ok: false, error: "Dê um nome ao item." };
 
   const price = toMoney(input.price);
   if (price === undefined) return { ok: false, error: "Confira o preço do item." };
@@ -151,7 +151,6 @@ async function persistItem(
       : null;
 
   const fields = {
-    name,
     price,
     piece_count: pieceCount,
     description: input.description.trim().slice(0, 2000) || null,
@@ -172,6 +171,8 @@ async function persistItem(
       .maybeSingle();
     if (!current) return { ok: false, error: "Item não encontrado." };
 
+    // A blank name never renames an existing item or draft: the other fields are still saved.
+    const name = typedName || current.name;
     const slug =
       current.name === name && current.slug
         ? current.slug
@@ -179,15 +180,16 @@ async function persistItem(
 
     const { error } = await supabase
       .from("items")
-      .update({ ...fields, slug, active: Boolean(input.active) })
+      .update({ ...fields, name, slug, active: Boolean(input.active) })
       .eq("id", id)
       .eq("tenant_id", tenant.id);
     if (error) return { ok: false, error: "Não foi possível salvar o item." };
   } else {
+    const name = typedName || DRAFT_NAME;
     const slug = await uniqueSlug(supabase, tenant.id, slugify(name) || "rascunho", null);
     const { data, error } = await supabase
       .from("items")
-      .insert({ ...fields, tenant_id: tenant.id, slug, active: opts.draft ? false : Boolean(input.active) })
+      .insert({ ...fields, name, tenant_id: tenant.id, slug, active: opts.draft ? false : Boolean(input.active) })
       .select("id")
       .single();
     if (error || !data) return { ok: false, error: "Não foi possível salvar o item." };
@@ -214,7 +216,6 @@ export async function autosaveItem(input: ItemInput): Promise<AutosaveResult> {
     (input.components ?? []).some((c) => c?.name?.trim());
 
   if (!input.id && !hasContent) return { ok: true, skipped: true };
-  if (input.id && !name) return { ok: true, skipped: true };
 
   return persistItem(input, { draft: true });
 }

@@ -289,6 +289,14 @@ export function ItemForm({
     });
   }
 
+  const namedComponents = components.filter((c) => c.name.trim());
+  const subItemsTotal =
+    Math.round(namedComponents.reduce((sum, c) => sum + (c.unit_price ?? 0) * (c.quantity || 1), 0) * 100) / 100;
+  const subItemsMissingValue = namedComponents.filter((c) => !c.unit_price).length;
+  const subItemsPieces = namedComponents.reduce((sum, c) => sum + (c.quantity || 1), 0);
+  const subItemsReplacement =
+    Math.round(namedComponents.reduce((sum, c) => sum + (c.replacement_value ?? 0) * (c.quantity || 1), 0) * 100) / 100;
+
   const photoLabel =
     photoBusy === "preparing" ? "Preparando foto…" : photoBusy === "uploading" ? "Enviando…" : imageUrl ? "Trocar foto" : "Escolher foto";
 
@@ -470,8 +478,8 @@ export function ItemForm({
               }`}
             >
               <span
-                className={`absolute top-0.5 h-6 w-6 rounded-full bg-white shadow transition-transform ${
-                  active ? "translate-x-[22px]" : "translate-x-0.5"
+                className={`absolute left-0.5 top-0.5 h-6 w-6 rounded-full bg-white shadow transition-transform ${
+                  active ? "translate-x-5" : "translate-x-0"
                 }`}
               />
             </button>
@@ -492,9 +500,12 @@ export function ItemForm({
           </button>
         </div>
         <p className="mb-3 text-xs text-neutral-500">
-          Aparece na vitrine e é detalhado no contrato quando este kit for usado — com foto, valor e valor de
-          reposição (caso quebre/perca). Cada sub-item é salvo assim que você preenche. Use o mesmo nome de
-          itens de outros kits para reaproveitar os dados.
+          Aparece na vitrine e é detalhado no contrato, com foto, valor e reposição (se quebrar ou perder).{" "}
+          <span className="font-medium text-neutral-700">
+            Os valores são de 1 unidade: a quantidade multiplica na soma.
+          </span>{" "}
+          Cada sub-item é salvo assim que você preenche. Use o mesmo nome de itens de outros kits para
+          reaproveitar os dados.
         </p>
 
         {components.length === 0 && (
@@ -576,9 +587,9 @@ export function ItemForm({
                   Remover
                 </button>
               </div>
-              <div className="grid grid-cols-3 gap-2 sm:pl-[56px]">
+              <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] gap-2 sm:grid-cols-3 sm:pl-[56px]">
                 <div>
-                  <label className="mb-0.5 block text-[10px] font-medium text-neutral-400">Qtd.</label>
+                  <label className="mb-0.5 block text-[11px] font-medium text-neutral-500">Quantidade</label>
                   <input
                     type="number"
                     inputMode="numeric"
@@ -590,7 +601,7 @@ export function ItemForm({
                   />
                 </div>
                 <div>
-                  <label className="mb-0.5 block text-[10px] font-medium text-neutral-400">Valor (R$)</label>
+                  <label className="mb-0.5 block text-[11px] font-medium text-neutral-500">Valor de 1 unidade (R$)</label>
                   <input
                     type="text"
                     inputMode="decimal"
@@ -603,8 +614,10 @@ export function ItemForm({
                     className={`${inputClass} px-2 py-2`}
                   />
                 </div>
-                <div>
-                  <label className="mb-0.5 block text-[10px] font-medium text-neutral-400">Reposição (R$)</label>
+                <div className="col-span-2 sm:col-span-1">
+                  <label className="mb-0.5 block text-[11px] font-medium text-neutral-500">
+                    Reposição de 1 unidade (R$)
+                  </label>
                   <input
                     type="text"
                     inputMode="decimal"
@@ -618,9 +631,52 @@ export function ItemForm({
                   />
                 </div>
               </div>
+              <p className="text-[11px] text-neutral-500 sm:pl-[56px]">
+                {c.unit_price ? (
+                  <>
+                    {c.quantity} × R$ {moneyToDisplay(c.unit_price)} ={" "}
+                    <span className="font-semibold text-neutral-800">
+                      R$ {moneyToDisplay(Math.round(c.unit_price * c.quantity * 100) / 100)}
+                    </span>
+                  </>
+                ) : (
+                  "Informe o valor de 1 unidade para ver o total deste sub-item."
+                )}
+              </p>
             </div>
           ))}
         </div>
+
+        {components.length > 0 && (
+          <div className="mt-3 rounded-xl border border-neutral-200 bg-neutral-50 p-4" aria-live="polite">
+            <div className="flex items-baseline justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-sm font-semibold text-neutral-800">Soma dos sub-itens</p>
+                <p className="text-[11px] text-neutral-500">
+                  {namedComponents.length} {namedComponents.length === 1 ? "sub-item" : "sub-itens"} · {subItemsPieces}{" "}
+                  {subItemsPieces === 1 ? "peça" : "peças"}
+                </p>
+              </div>
+              <p className="text-xl font-bold tabular-nums text-neutral-900">R$ {moneyToDisplay(subItemsTotal)}</p>
+            </div>
+
+            {subItemsReplacement > 0 && (
+              <div className="mt-2 flex items-baseline justify-between gap-3 border-t border-neutral-200 pt-2">
+                <p className="text-xs text-neutral-600">Reposição, se tudo quebrar ou for perdido</p>
+                <p className="text-sm font-semibold tabular-nums text-neutral-700">
+                  R$ {moneyToDisplay(subItemsReplacement)}
+                </p>
+              </div>
+            )}
+
+            <p className="mt-3 text-[11px] leading-relaxed text-neutral-500">
+              Conta: valor de 1 unidade × quantidade, somado. É só para você conferir e{" "}
+              <span className="font-medium">não muda o preço do item</span>.
+              {subItemsMissingValue > 0 &&
+                ` ${subItemsMissingValue} ${subItemsMissingValue === 1 ? "sub-item está" : "sub-itens estão"} sem valor e não entram na soma.`}
+            </p>
+          </div>
+        )}
       </section>
 
       {error && (
