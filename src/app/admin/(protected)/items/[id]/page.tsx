@@ -1,3 +1,5 @@
+export const maxDuration = 60;
+
 import { notFound } from "next/navigation";
 import {
   getAdminCategories,

@@ -52,26 +52,35 @@ Responda SOMENTE com um JSON válido no formato {"name": "...", "description": "
 
 Responda SOMENTE com um JSON válido no formato {"name": "...", "description": "..."}, sem markdown, sem texto antes ou depois.`;
 
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent?key=${apiKey}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [{ text: prompt }, { inline_data: { mime_type: mimeType, data: base64 } }],
-            },
-          ],
-          generationConfig: { responseMimeType: "application/json" },
-        }),
-        signal: AbortSignal.timeout(25000),
-      }
-    );
+    const body = JSON.stringify({
+      contents: [{ parts: [{ text: prompt }, { inline_data: { mime_type: mimeType, data: base64 } }] }],
+      generationConfig: { responseMimeType: "application/json" },
+    });
 
-    if (!res.ok) {
-      console.error("Gemini API error", res.status, await res.text());
-      return { ok: false, error: "A IA não respondeu. Tente novamente em instantes." };
+    // The free Gemini tier sometimes answers "overloaded"/"rate limited" for a moment.
+    // Retry the fast model once, then fall back to the standard one before giving up.
+    const attempts = ["gemini-flash-lite-latest", "gemini-flash-lite-latest", "gemini-flash-latest"];
+    let res: Response | null = null;
+    for (let i = 0; i < attempts.length; i++) {
+      if (i > 0) await new Promise((r) => setTimeout(r, 900));
+      try {
+        const attempt = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${attempts[i]}:generateContent?key=${apiKey}`,
+          { method: "POST", headers: { "Content-Type": "application/json" }, body, signal: AbortSignal.timeout(15000) }
+        );
+        if (attempt.ok) {
+          res = attempt;
+          break;
+        }
+        console.error("Gemini API error", attempts[i], attempt.status, await attempt.text());
+        if (![408, 429, 500, 502, 503, 504].includes(attempt.status)) break;
+      } catch (err) {
+        console.error("Gemini request failed", attempts[i], err);
+      }
+    }
+
+    if (!res) {
+      return { ok: false, error: "A IA está ocupada agora. Toque em sugerir de novo em alguns segundos." };
     }
 
     const data = await res.json();

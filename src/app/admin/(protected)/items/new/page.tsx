@@ -1,3 +1,5 @@
+export const maxDuration = 60;
+
 import { getAdminCategories, getCurrentTenant, getKitComponentsCatalog } from "@/lib/data/admin";
 import { ItemForm } from "../item-form";
 

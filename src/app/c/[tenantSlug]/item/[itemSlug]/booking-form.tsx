@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState, useTransition } from "react";
+import { useMemo, useState, useSyncExternalStore, useTransition } from "react";
 import { formatPhone } from "@/lib/masks";
 import { whatsappLink } from "@/lib/whatsapp";
 import { ChevronLeftIcon, ChevronRightIcon, WhatsAppIcon } from "../../icons";
@@ -23,6 +23,8 @@ type Props = {
 };
 
 type Step = "date" | "details" | "done";
+
+const noopSubscribe = () => () => {};
 
 function toDateKey(d: Date) {
   const y = d.getFullYear();
@@ -71,14 +73,18 @@ export function BookingForm({
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
+  // "Today" must come from the visitor's own clock. The server runs in UTC, so rendering it
+  // there disagrees with a Brazilian phone every evening and breaks hydration.
+  const todayKey = useSyncExternalStore(noopSubscribe, () => toDateKey(new Date()), () => null);
   const today = useMemo(() => {
-    const d = new Date();
-    d.setHours(0, 0, 0, 0);
-    return d;
-  }, []);
+    if (!todayKey) return null;
+    const [y, m, d] = todayKey.split("-").map(Number);
+    return new Date(y, m - 1, d);
+  }, [todayKey]);
 
   const [monthOffset, setMonthOffset] = useState(0);
-  const monthStart = new Date(today.getFullYear(), today.getMonth() + monthOffset, 1);
+  const base = today ?? new Date(0);
+  const monthStart = new Date(base.getFullYear(), base.getMonth() + monthOffset, 1);
   const monthName = monthStart.toLocaleDateString("pt-BR", { month: "long" });
   const monthLabel = `${monthName.charAt(0).toUpperCase()}${monthName.slice(1)} de ${monthStart.getFullYear()}`;
   const stepIndex = STEPS.findIndex((s) => s.id === step);
@@ -119,6 +125,15 @@ export function BookingForm({
       if (result.ok) setStep("done");
       else setError(result.error);
     });
+  }
+
+  if (!today) {
+    return (
+      <section id="reserva" className={`mt-10 scroll-mt-24 rounded-3xl p-5 sm:p-6 ${theme.card}`} aria-label="Reservar este item">
+        <h2 className="font-display text-xl font-bold">Reserve a sua data</h2>
+        <div className={`mt-5 h-80 animate-pulse rounded-2xl ${theme.cardImgBg}`} />
+      </section>
+    );
   }
 
   const label = `mb-1.5 block text-[13px] font-semibold ${theme.softText}`;
